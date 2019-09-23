@@ -47,12 +47,12 @@
   </div>
   
   <div class="searchContainer">
-  <div class="row" v-if="mentors.length > 6" style="display:flex">
+  <div class="row" v-if="mentors.length > 6">
   <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
   </div>
-  
-  <div class="row" v-if="mentors.length < 6" style="display:webkit-box!important;">
-  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
+
+  <div style="display:inherit;margin-right: -15px;margin-left: -15px;width:100%;" v-if="mentors.length < 6">
+  <search-card style="max-width:25rem;!important;" v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
   </div>
   
   </div>
@@ -83,6 +83,7 @@ export default {
 	rankOptions: [
           { value: 'platinum', text: 'Platinum' },
           { value: 'diamond', text: 'Diamond' },
+		  { value: 'master', text: 'Master'},
           { value: 'grandmaster', text: 'Grandmaster' },
           { value: 'challenger', text: 'Challenger'},
 		  { value: 'professional', text: 'Professional', disabled: true }
@@ -124,12 +125,14 @@ export default {
 		rf = 1;
 	} else if(r.search("diamond") >= 0) {
 		rf = 2;
-	} else if(r.search("grandmaster") >= 0) {
+	} else if(r.search("master") >= 0) {
 		rf = 3;
-	} else if(r.search("challenger") >= 0) {
+	} else if(r.search("grandmaster") > 0) {
 		rf = 4;
-	} else if(r.search("professional") >= 0) {
+	} else if(r.search("challenger") >= 0) {
 		rf = 5;
+	} else if(r.search("professional") >= 0) {
+		rf = 6;
 	}
 	}
 	return rf;
