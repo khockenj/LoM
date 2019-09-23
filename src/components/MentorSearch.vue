@@ -1,0 +1,178 @@
+<template>
+  <div id="mentorSearch">
+  
+  <div class="searchBarContainer">
+  <b-input-group>
+
+    <b-form-input size='lg' v-model.trim="search" v-on:input="searchFunction" placeholder="Search Mentors"></b-form-input>
+
+    <template v-slot:append>
+	<b-form-select class="btn" style="color:#6c757d!important;width:240%;" size='lg' v-model="champFilter" :options="champOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Champion</option>
+      </template>
+	  </b-form-select>
+	  
+	  <b-form-select class="btn" style="color:#6c757d!important;width:200%;" size='lg' v-model="rankFilter" :options="rankOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Rank</option>
+      </template>
+	  </b-form-select>
+	 
+	 <b-form-select class="btn" style="color:#6c757d!important;width:110%;" size='lg' v-model="regionFilter" :options="regionOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Region</option>
+      </template>
+	  </b-form-select>
+	  
+	  <b-form-select class="btn" style="color:#6c757d!important;width:150%;" size='lg' v-model="languageFilter" :options="languageOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Language</option>
+      </template>
+	  </b-form-select>
+	  
+	  <b-form-select class="btn" style="color:#6c757d!important;width:110%;" size='lg' v-model="reviewFilter" :options="reviewOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Type</option>
+      </template>
+	  </b-form-select>
+	  
+	  <b-form-select class="btn" style="color:#6c757d!important;width:70%" size='lg' v-model="moneyFilter" :options="moneyOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Cost</option>
+      </template>
+	  </b-form-select>
+    </template>
+  </b-input-group>
+  </div>
+  
+  <div class="searchContainer">
+  <div class="row" v-if="mentors.length > 6" style="display:flex">
+  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
+  </div>
+  
+  <div class="row" v-if="mentors.length < 6" style="display:webkit-box!important;">
+  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
+  </div>
+  
+  </div>
+  </div>
+  </div>
+</template>
+
+<script>
+import SearchCard from './SearchCard'
+export default {
+  name: 'MentorSearch',
+   components: {
+    SearchCard
+  },
+	props: ['champions'],
+	data: function() {
+	return {
+	search: '',
+	mentors: [],
+	
+	rankFilter: null,
+	champFilter: null,
+	languageFilter: null,
+	reviewFilter: null,
+	regionFilter: null,
+	moneyFilter: null,
+	
+	rankOptions: [
+          { value: 'platinum', text: 'Platinum' },
+          { value: 'diamond', text: 'Diamond' },
+          { value: 'grandmaster', text: 'Grandmaster' },
+          { value: 'challenger', text: 'Challenger'},
+		  { value: 'professional', text: 'Professional', disabled: true }
+        ],
+    champOptions: this.$parent.championsList(),
+	regionOptions: [
+		  { value: 'na', text: 'NA' },
+          { value: 'euw', text: 'EUW' },
+          { value: 'kr', text: 'KR' },
+          { value: 'cn', text: 'CN'},
+		  { value: 'garen', text: 'Garena'}
+		  ],
+	languageOptions: [
+		  { value: 'english', text: 'English' },
+          { value: 'korean', text: 'Korean' },
+          { value: 'spanish', text: 'Spanish' },
+          { value: '', text: 'ab'},
+		  { value: '', text: 'cd'}	
+	],
+	reviewOptions: [
+		  { value: 'live', text: 'Live' },
+          { value: 'private', text: 'Private' },
+          { value: 'written', text: 'Written' },
+	],
+	moneyOptions: [
+		  { value: 'free', text: 'Free' },
+          { value: 'paid', text: 'Paid' },
+	],
+  }
+  },
+  methods: {
+  convertRank: function(r) {
+	var rf = 0;
+	if(r != null) {
+	r = r.toLowerCase();
+
+	
+  	if(r.search("platinum") >= 0){
+		rf = 1;
+	} else if(r.search("diamond") >= 0) {
+		rf = 2;
+	} else if(r.search("grandmaster") >= 0) {
+		rf = 3;
+	} else if(r.search("challenger") >= 0) {
+		rf = 4;
+	} else if(r.search("professional") >= 0) {
+		rf = 5;
+	}
+	}
+	return rf;
+  },
+  searchFunction: function() {
+    var vm = this;
+
+	var ret = [];
+	var list = [
+      { id: 1, name: "K3Vx", main: "ryze", rank: "diamond_4", champs:["ryze","cassiopeia"], region: ["na"], languages: ["english", "spanish"], moneyTypes: ["free"], reviewTypes: ["live", "private", "written"] },
+      { id: 2, name: "Scarsquid", main: "galio", rank: "bronze_1", champs:["galio", "yasuo"], region: ["na"], languages: ["english"], moneyTypes: ["free", "paid"], reviewTypes: ["private"]},
+      { id: 3, name: "Sofia", main: "evelynn", rank: "challenger_1", champs:["evelynn", "leona"], region: ["na", "euw"], languages: ["english"], moneyTypes: ["paid"], reviewTypes: ["written"]},
+	   { id: 4, name: "Shia", main: "vladimir", rank: "grandmaster_1", champs:["vladimir","leona"], region: ["garena"], languages: ["english", "korean"], moneyTypes: ["free", "paid"], reviewTypes: ["live", "private", "written"] },
+      { id: 5, name: "Phoenix", main: "camille", rank: "grandmaster_1", champs:["camille", "riven"], region: ["na"], languages: ["english"], moneyTypes: ["free", "paid"], reviewTypes: ["private"]},
+      { id: 6, name: "George", main: "aurelionsol", rank: "diamond_1", champs:["aurelion sol"], region: ["euw"], languages: ["english"], moneyTypes: ["paid"], reviewTypes: ["written"]},
+	   { id: 7, name: "Kat", main: "leblanc", rank: "master_1", champs:["leblanc", "ryze"], region: ["euw", "cn"], languages: ["english", "chinese"], moneyTypes: ["paid"], reviewTypes: ["live", "private", "written"] },
+	  
+    ]
+	list.forEach(function(x) {
+		if(
+		(x.name.toLowerCase().search(vm.search.toLowerCase()) >= 0)
+		&& (vm.convertRank(x.rank) >= vm.convertRank(vm.rankFilter))
+		&& ((vm.regionFilter == null) || (x.region.includes(vm.regionFilter)))
+		&& ((vm.languageFilter == null) || (x.languages.includes(vm.languageFilter)))
+		&& ((vm.moneyFilter == null) || (x.moneyTypes.includes(vm.moneyFilter)))
+		&& ((vm.reviewFilter == null) || (x.reviewTypes.includes(vm.reviewFilter)))
+		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter.toLowerCase())))
+		) {
+			ret.push(x);
+		}
+	})
+	console.log(ret);
+	this.mentors = ret;
+  }
+  },
+  computed: {
+  
+  },
+  ready: function(){
+
+  }, 
+  watch: {}
+}
+
+</script>
+
