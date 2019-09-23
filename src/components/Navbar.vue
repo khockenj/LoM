@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background-color:#19669C">
+  <b-navbar toggleable="lg" type="dark" style="background-color:black">
     <b-navbar-brand href="#">LoM
     <!--<img src="/static/logo.png" style="max-width:128px;position:absolute;z-index:1000;left:-1.5rem;top:-.5rem;" class="d-inline-block align-top" alt="LoM">-->
     </b-navbar-brand>
