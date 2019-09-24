@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" style="background-color:black">
+  <b-navbar toggleable="lg" type="dark" style="background-color:black;">
     <b-navbar-brand href="#">LoM
     <!--<img src="/static/logo.png" style="max-width:128px;position:absolute;z-index:1000;left:-1.5rem;top:-.5rem;" class="d-inline-block align-top" alt="LoM">-->
     </b-navbar-brand>
@@ -8,8 +8,10 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-		<b-nav-item><router-link class="nav-link" to="/">Home</router-link></b-nav-item>
-        <b-nav-item><router-link class="nav-link" to="/search">Search</router-link></b-nav-item>
+		  <b-nav-item><router-link class="nav-link" to="/">Home</router-link></b-nav-item>
+      <b-nav-item><router-link class="nav-link" to="/search">Search</router-link></b-nav-item>
+      <b-nav-item><router-link class="nav-link" to="/login">Login</router-link></b-nav-item>
+      <b-nav-item><router-link class="nav-link" to="/search">faker</router-link></b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
