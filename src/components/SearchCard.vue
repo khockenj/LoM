@@ -2,7 +2,7 @@
   <b-card
   text-variant="white"
     no-body
-    style="max-width: 20rem;background-color:black;border:1px solid #01E3D0;"
+    style="max-width: 20rem;background-color:black;border:1px solid white;"
 	:img-src="'/static/squareicons/' + main + '_square.png'"
     img-alt="Image"
     img-top
