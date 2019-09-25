@@ -15,11 +15,12 @@ export default {
   background-image:url('/static/backgrounds/cassiopeia.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
+   background-attachment: fixed;
   background-size: cover;
   position:fixed;
   width:100%;
   height:100%;
-  top:5%;
+  top:0;
   left:0px;
   z-index:-1000;
 }
