@@ -18,13 +18,20 @@
     </b-list-group>
 
     <b-card-body class="mx-auto">
-		<a href="#" class="card-link" >View Mentor</a>
+		<a href="#" class="card-link">View Mentor</a>
 		<a href="#" class="card-link">Check Availability</a>
     </b-card-body>
 
 
   </b-card>
 </template>
+<style scoped>
+.rankIcon {
+	max-width:48px;
+	max-height:48px;
+	vertical-align: middle;
+}
+</style>
 
 <script>
 export default {

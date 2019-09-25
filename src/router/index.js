@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import SearchPage from '../components/search'
 import HomePage from '../components/home'
 import LoginPage from '../components/login'
+import ProfilePage from '../components/profile'
 Vue.use(Router)
 
 export default new Router({
@@ -22,6 +23,11 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: LoginPage
+    },
+    {
+      path: '/profile/:user',
+      name: 'Profile',
+      component: ProfilePage
     }
   ]
 })
