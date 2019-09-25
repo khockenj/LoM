@@ -29,7 +29,7 @@ export default {
 </script>
 <style scoped>
 .overlay {
-  background-color: rgba(238, 238, 238, 0.5) !important;
+  background-color: rgba(0,0,0, 0.4) !important;
   background-image:url('/static/backgrounds/zed.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
