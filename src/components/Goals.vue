@@ -16,8 +16,8 @@
     </b-list-group>
     <template v-slot:footer>
     <b-card-body class="mx-auto" style="padding:0!important;">
-		 <b-button variant="warning">Edit Goals</b-button>
-		 <b-button variant="success">Share</b-button>
+		 <b-button variant="warning" v-b-modal.changeGoals>Edit Goals</b-button>
+		 <b-button variant="success" v-b-modal.shareGoals>Share</b-button>
     </b-card-body>
     </template>
       </b-card>

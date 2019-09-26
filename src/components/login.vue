@@ -1,8 +1,8 @@
 <template>
-<div class="login">
+<div class="login" style="max-width:400px;">
 <div class="overlay"></div>
    <!-- <img src="/static/logo.png" style="max-width:60%;padding-bottom:1%;" />-->
-  <b-container bg-variant="dark" style="color:white;padding-bottom:15%;text-align:left" fluid>
+  <b-container bg-variant="dark" style="color:white;padding-bottom:15%;text-align:left">
     <b-row class="my-1 py-2">
         <b-col style="font-size:2rem;text-align:center;padding-bottom:3%">Sign In</b-col>
         </b-row>
@@ -39,7 +39,7 @@
     </b-form-checkbox>
          </b-col>
          <b-col>
-        <router-link class="nav-link" style="margin-left:2.5rem;" to="/search">Forgot info?</router-link>
+        <router-link class="nav-link" style="position:absolute;bottom:0;right:0;" to="/search">Forgot info?</router-link>
          </b-col>
         </b-row>
   </b-container>
@@ -71,7 +71,6 @@ export default {
 .login {
 border:2px solid white;
 margin:auto;
-width:20%;
 margin-top:5%;
 border-radius:5rem;
 background-color:#32383E;

@@ -3,8 +3,8 @@
 <div class="overlay"></div>
 <div>
   <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
-    <i class="fas fa-cog" style="position: absolute;right:.5%;top:7%;"></i>
-    <i class="fas fa-info-circle" style="position:absolute; left:.5%; top:7%;"></i>
+    <i class="fas fa-cog" style="position: absolute;right:.5%;top:7%;" v-b-modal.settings></i>
+    <i class="fas fa-info-circle" style="position:absolute; left:.5%; top:7%;" v-b-modal.info></i>
     <template v-slot:header>{{ $route.params.user }}<img class="rankIcon" :src="'/static/ranks/' + 'diamond_4' + '.png'" /></template>
   </b-jumbotron>
 </div>
@@ -33,6 +33,34 @@
         </b-col>
     </b-row>
 </b-container>
+
+<b-modal id="settings">   
+   <template v-slot:modal-title>
+      Settings
+    </template>
+    settings
+    </b-modal>
+
+<b-modal id="info">   
+   <template v-slot:modal-title>
+      Information
+    </template>
+    info
+    </b-modal>
+
+  <b-modal id="shareGoals">   
+   <template v-slot:modal-title>
+      Share Goals
+    </template>
+    share
+    </b-modal>
+
+<b-modal id="changeGoals">   
+   <template v-slot:modal-title>
+      Change Goals
+    </template>
+    change
+    </b-modal>
 
 </div>
 </template>

@@ -17,7 +17,7 @@
     </b-list-group>
     <template v-slot:footer>
     <b-card-body class="mx-auto" style="padding:0!important;">
-		 <b-button block variant="info">Find a mentor</b-button>
+		 <b-button block variant="info" to="/search">Find a mentor</b-button>
     </b-card-body>
     </template>
       </b-card>

@@ -18,7 +18,7 @@
     </b-list-group>
 
     <b-card-body class="mx-auto">
-		<a href="#" class="card-link">View Mentor</a>
+		<router-link class="card-link" :to="'/profile/' + name">View Mentor</router-link>
 		<a href="#" class="card-link">Check Availability</a>
     </b-card-body>
 
