@@ -12,11 +12,14 @@
       <b-list-group-item>Weekly Games: <span class="green">100/5</span></b-list-group-item>
       <b-list-group-item>KDA: <span class="yellow">2.85/3.00</span></b-list-group-item>
       <b-list-group-item>Total Champs Played: <span class="red">10/2</span></b-list-group-item>
+      <b-list-group-item>9/19/19 - 9/26/19</b-list-group-item>
     </b-list-group>
-    <b-card-body class="mx-auto" style="padding-bottom:0rem!important;">
-		<a href="#" class="card-link" >Change Goals</a>
-		<a href="#" class="card-link">Share</a>
+    <template v-slot:footer>
+    <b-card-body class="mx-auto" style="padding:0!important;">
+		 <b-button variant="warning">Edit Goals</b-button>
+		 <b-button variant="success">Share</b-button>
     </b-card-body>
+    </template>
       </b-card>
   </template>
 

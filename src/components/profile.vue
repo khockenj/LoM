@@ -7,16 +7,16 @@
     <template v-slot:header>{{ $route.params.user }}<img class="rankIcon" :src="'/static/ranks/' + 'diamond_4' + '.png'" /></template>
   </b-jumbotron>
 </div>
-<b-container fluid>
+<b-container style="max-width:1200px">
     <b-row class="equal">
         <b-col lg="6">
-            <Plotly :data="data" :layout="layout" :displayModeBar="true"/>
+            <Plotly style="height:100%;" :data="data" :layout="layout" :displayModeBar="true"/>
         </b-col>
-        <b-col>
-            <goals/>
+        <b-col lg="3">
+            <goals style="height:100%;"/>
         </b-col>
-        <b-col>
-            <stats/>
+        <b-col lg="3">
+            <stats style="height:100%;"/>
         </b-col>
     </b-row>
     <b-row>
