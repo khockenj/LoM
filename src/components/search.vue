@@ -1,6 +1,7 @@
 <template>
 <div class="search">
 <div class="overlay"></div>
+
 	<mentor-search/>
 </div>
 </template>

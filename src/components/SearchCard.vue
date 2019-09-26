@@ -3,7 +3,7 @@
   text-variant="white"
   bg-variant="dark"
     no-body
-    style="max-width: 20rem;border:1px solid white;"
+    style="max-width:20rem;min-width:20rem;border:1px solid white;"
 	:img-src="'/static/squareicons/' + main + '_square.png'"
     img-alt="Image"
     img-top

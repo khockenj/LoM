@@ -47,19 +47,15 @@
   </div>
   
   <div class="searchContainer">
-  <div class="row" v-if="mentors.length > 6">
-  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
-  </div>
-
-  <div style="display:inherit;margin-right: -15px;margin-left: -15px;width:100%;" v-if="mentors.length < 6">
-  <search-card style="max-width:25rem;!important;" v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
-  </div>
   
+   <b-card-group deck>
+  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs"/>
+  </b-card-group>
+
   </div>
   </div>
   </div>
 </template>
-
 <script>
 import SearchCard from './SearchCard'
 export default {
