@@ -1,5 +1,6 @@
 .searchContainer {
 	display:flex;
+	max-width:2000px;
 }
 .card {
 	margin:1%;

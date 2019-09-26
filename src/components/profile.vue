@@ -4,6 +4,7 @@
 <div>
   <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
     <i class="fas fa-cog" style="position: absolute;right:.5%;top:7%;"></i>
+    <i class="fas fa-info-circle" style="position:absolute; left:.5%; top:7%;"></i>
     <template v-slot:header>{{ $route.params.user }}<img class="rankIcon" :src="'/static/ranks/' + 'diamond_4' + '.png'" /></template>
   </b-jumbotron>
 </div>
