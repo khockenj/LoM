@@ -7,6 +7,7 @@
     <i class="fas fa-info-circle" style="position:absolute; left:.5%; top:7%;" v-b-modal.info></i>
     <template v-slot:header>{{ $route.params.user }}<img class="rankIcon" :src="'/static/ranks/' + 'diamond_4' + '.png'" /></template>
     <div><i class="fas fa-star star" v-for="s in Math.floor(stars)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(stars-Math.floor(stars))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(stars)+customRound(stars-Math.floor(stars))[1]"></i></div>
+    <div style="font-size:24px;position:absolute;right:.5%;top:19%;"><i class="fab fa-twitch"></i><i class="fab fa-youtube"></i><i class="fab fa-discord"></i><i class="fab fa-twitter"></i><i class="fab fa-patreon"></i></div>
   </b-jumbotron>
 </div>
 <b-container style="max-width:1200px">
