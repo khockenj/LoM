@@ -66,6 +66,13 @@
     change
     </b-modal>
 
+    <b-modal id="bookSession">   
+   <template v-slot:modal-title>
+      Book Session
+    </template>
+    calendar
+    </b-modal>
+
 </div>
 </template>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
