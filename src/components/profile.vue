@@ -11,7 +11,7 @@
   </b-jumbotron>
 </div>
 <b-container style="max-width:1200px">
-    <b-row class="equal">
+    <b-row>
         <b-col lg="6">
             <Plotly v-if="type != 'mentor'" style="height:100%;" :data="data" :layout="layout" :displayModeBar="true"/>
             <about-me v-if="type == 'mentor'" style="height:100%;" />
@@ -107,7 +107,7 @@ export default {
       title: "Rank Graph"
     },
     mains: ["Ryze", "Cassiopeia", "Neeko", "Velkoz", "Taliyah", "Diana"],
-    type: "mentor",
+    type: "student",
     stars: 3.7,
   }
 },
