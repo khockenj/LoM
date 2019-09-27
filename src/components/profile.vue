@@ -6,18 +6,22 @@
     <i class="fas fa-cog" style="position: absolute;right:.5%;top:7%;" v-b-modal.settings></i>
     <i class="fas fa-info-circle" style="position:absolute; left:.5%; top:7%;" v-b-modal.info></i>
     <template v-slot:header>{{ $route.params.user }}<img class="rankIcon" :src="'/static/ranks/' + 'diamond_4' + '.png'" /></template>
+    <div><i class="fas fa-star star" v-for="s in Math.floor(stars)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(stars-Math.floor(stars))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(stars)+customRound(stars-Math.floor(stars))[1]"></i></div>
   </b-jumbotron>
 </div>
 <b-container style="max-width:1200px">
     <b-row class="equal">
         <b-col lg="6">
-            <Plotly style="height:100%;" :data="data" :layout="layout" :displayModeBar="true"/>
+            <Plotly v-if="type != 'mentor'" style="height:100%;" :data="data" :layout="layout" :displayModeBar="true"/>
+            <about-me v-if="type == 'mentor'" style="height:100%;" />
         </b-col>
         <b-col lg="3">
-            <goals style="height:100%;"/>
+            <goals v-if="type != 'mentor'" style="height:100%;"/>
+            <achievements v-if="type == 'mentor'" style="height:100%;" />
         </b-col>
         <b-col lg="3">
-            <stats style="height:100%;"/>
+            <stats v-if="type != 'mentor'" style="height:100%;"/>
+            <requirements v-if="type == 'mentor'" style="height:100%;" />
         </b-col>
     </b-row>
     <b-row>
@@ -70,13 +74,19 @@ import { Plotly } from 'vue-plotly'
 import Goals from './Goals'
 import ProfileStats from './ProfileStats'
 import ProfileChampionCard from './ProfileChampionCard'
+import AboutMe from './AboutMe'
+import Achievements from './Achievements'
+import Requirements from './Requirements'
 export default {
   name: 'ProfilePage',
     components: {
     Plotly,
     'goals': Goals,
     'stats': ProfileStats,
-    'profile-champion': ProfileChampionCard
+    'profile-champion': ProfileChampionCard,
+    'about-me': AboutMe,
+    'requirements': Requirements,
+    'achievements': Achievements
   },
   data: function() {
   return {
@@ -88,9 +98,22 @@ export default {
     layout:{
       title: "Rank Graph"
     },
-    mains: ["Ryze", "Cassiopeia", "Neeko", "Velkoz", "Taliyah", "Diana"]
+    mains: ["Ryze", "Cassiopeia", "Neeko", "Velkoz", "Taliyah", "Diana"],
+    type: "mentor",
+    stars: 3.7,
   }
-}
+},
+  methods: {
+    customRound: function(n){
+      if(n>=.4) {
+        return [1,0];
+      } else if(n != 0) {
+        return [0,1];
+      } else {
+        return [0,0];
+      }
+    }
+  }
 }
 
  
@@ -117,4 +140,5 @@ export default {
 	max-height:96px;
 	vertical-align: middle;
 }
+
 </style>
