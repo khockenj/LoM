@@ -27,6 +27,11 @@ export default new Router({
       path: '/profile/:user',
       name: 'Profile',
       component: ProfilePage
-    }
+    },
+    { 
+      path: '*',
+      name: 'Not Found',
+      component: 'NotFound' 
+  }
   ]
 })

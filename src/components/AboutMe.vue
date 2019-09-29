@@ -7,13 +7,7 @@
         align="center"
       >
     <b-card-body style="padding:0!important;">
-		 
-        this is mentor profile test. Hiya! my names Kongzhi otherwise known as Sameer Alam. I've played league for 7 years and I've played in multiple regions
-[NA, EUW, LAN, KR, JP] I've worked as an analyst for teams at all levels for the past 3 years. 
-- Worked under many successful organizations and teams. EX CONQUEROR, SourceGaming, Wayne County High School ESports Organization
-And FirstBlood Gaming. I can create reports to help track how you're doing in solo queue. I can also show you how to set up
-exercises that can help you or your team learn micromanagement and macromanagement.
-
+      {{ bio }}
     </b-card-body>
       </b-card>
   </template>
@@ -21,5 +15,6 @@ exercises that can help you or your team learn micromanagement and macromanageme
   <script>
 export default {
   name: 'AboutMe',
+  props: ['bio']
 }
 </script>

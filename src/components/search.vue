@@ -20,12 +20,13 @@ export default {
 	console.log(this);
 	var championList = [];
 	for (const [key, value] of Object.entries(this.$parent.$parent.champions)) {
-		championList.push({"text": value.name, "value": value.name.toLowerCase()});
+		championList.push({"text": value.name, "value": value.name});
 	}
 	console.log(championList);
 	return championList;
-	}
+  },
   }
+
   }
 </script>
 <style scoped>

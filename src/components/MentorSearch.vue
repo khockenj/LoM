@@ -58,6 +58,7 @@
 </template>
 <script>
 import SearchCard from './SearchCard'
+import axios from 'axios'
 export default {
   name: 'MentorSearch',
    components: {
@@ -68,7 +69,7 @@ export default {
 	return {
 	search: '',
 	mentors: [],
-	
+	list: [],
 	rankFilter: null,
 	champFilter: null,
 	languageFilter: null,
@@ -137,17 +138,7 @@ export default {
     var vm = this;
 
 	var ret = [];
-	var list = [
-      { id: 1, name: "K3Vx", main: "ryze", rank: "diamond_4", champs:["ryze","cassiopeia"], region: ["na"], languages: ["english", "spanish"], moneyTypes: ["free"], reviewTypes: ["live", "private", "written"] },
-      { id: 2, name: "Scarsquid", main: "galio", rank: "bronze_1", champs:["galio", "yasuo"], region: ["na"], languages: ["english"], moneyTypes: ["free", "paid"], reviewTypes: ["private"]},
-      { id: 3, name: "Sofia", main: "evelynn", rank: "challenger_1", champs:["evelynn", "leona"], region: ["na", "euw"], languages: ["english"], moneyTypes: ["paid"], reviewTypes: ["written"]},
-	   { id: 4, name: "Shia", main: "vladimir", rank: "grandmaster_1", champs:["vladimir","leona"], region: ["garena"], languages: ["english", "korean"], moneyTypes: ["free", "paid"], reviewTypes: ["live", "private", "written"] },
-      { id: 5, name: "Phoenix", main: "camille", rank: "grandmaster_1", champs:["camille", "riven"], region: ["na"], languages: ["english"], moneyTypes: ["free", "paid"], reviewTypes: ["private"]},
-      { id: 6, name: "George", main: "aurelionsol", rank: "diamond_1", champs:["aurelion sol"], region: ["euw"], languages: ["english"], moneyTypes: ["paid"], reviewTypes: ["written"]},
-	   { id: 7, name: "Kat", main: "leblanc", rank: "master_1", champs:["leblanc", "ryze"], region: ["euw", "cn"], languages: ["english", "chinese"], moneyTypes: ["paid"], reviewTypes: ["live", "private", "written"] },
-	  
-    ]
-	list.forEach(function(x) {
+	vm.list.forEach(function(x) {
 		if(
 		(x.name.toLowerCase().search(vm.search.toLowerCase()) >= 0)
 		&& (vm.convertRank(x.rank) >= vm.convertRank(vm.rankFilter))
@@ -155,13 +146,22 @@ export default {
 		&& ((vm.languageFilter == null) || (x.languages.includes(vm.languageFilter)))
 		&& ((vm.moneyFilter == null) || (x.moneyTypes.includes(vm.moneyFilter)))
 		&& ((vm.reviewFilter == null) || (x.reviewTypes.includes(vm.reviewFilter)))
-		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter.toLowerCase())))
+		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter)))
 		) {
 			ret.push(x);
 		}
 	})
-	console.log(ret);
 	this.mentors = ret;
+  },
+    getData: function() {
+    const path = './api/profileInfo/' + "MENTORS"
+    axios.get(path)
+    .then(response => {
+      this.list = response.data;
+    })
+    .catch(error => {
+      console.log(error)
+    })
   }
   },
   computed: {
@@ -170,7 +170,10 @@ export default {
   ready: function(){
 
   }, 
-  watch: {}
+  watch: {},
+  mounted: function() {
+	  this.getData();
+  }
 }
 
 </script>

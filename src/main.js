@@ -19,7 +19,7 @@ Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 
 
-var Search = new Vue({
+var base = new Vue({
    router,
    template: '<App/>',
    el: "#app",
@@ -32,7 +32,8 @@ var Search = new Vue({
   },
 	data: {
 		champions: Champions['data']
-	}
+  },
+  methods: {}
 });
 
 var Nav = new Vue({
