@@ -12,7 +12,13 @@
         <option :value="null">Champion</option>
       </template>
 	  </b-form-select>
-	  
+
+	  <b-form-select class="btn" style="color:#6c757d!important;width:100%;" size='lg' v-model="roleFilter" :options="roleOptions" v-on:input="searchFunction" variant="outline-secondary">
+	  <template v-slot:first>
+        <option :value="null">Role</option>
+      </template>
+	  </b-form-select>
+
 	  <b-form-select class="btn" style="color:#6c757d!important;width:200%;" size='lg' v-model="rankFilter" :options="rankOptions" v-on:input="searchFunction" variant="outline-secondary">
 	  <template v-slot:first>
         <option :value="null">Rank</option>
@@ -76,6 +82,7 @@ export default {
 	reviewFilter: null,
 	regionFilter: null,
 	moneyFilter: null,
+	roleFilter: null,
 	
 	rankOptions: [
           { value: 'platinum', text: 'Platinum' },
@@ -109,6 +116,13 @@ export default {
 		  { value: 'free', text: 'Free' },
           { value: 'paid', text: 'Paid' },
 	],
+	roleOptions: [
+		  { value: 'top', text: 'Top' },
+          { value: 'jungle', text: 'Jungle' },
+          { value: 'middle', text: 'Middle' },
+          { value: 'adc', text: 'ADC'},
+		  { value: 'support', text: 'Support'}	
+	]
   }
   },
   methods: {
@@ -147,6 +161,7 @@ export default {
 		&& ((vm.moneyFilter == null) || (x.moneyTypes.includes(vm.moneyFilter)))
 		&& ((vm.reviewFilter == null) || (x.reviewTypes.includes(vm.reviewFilter)))
 		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter)))
+		&& ((vm.roleFilter == null) || (x.champs.includes(vm.roleFilter)))
 		) {
 			ret.push(x);
 		}
@@ -154,7 +169,7 @@ export default {
 	this.mentors = ret;
   },
     getData: function() {
-    const path = './api/profileInfo/' + "MENTORS"
+    const path = 'http://localhost:5000/api/profileInfo/' + "MENTORS"
     axios.get(path)
     .then(response => {
       this.list = response.data;

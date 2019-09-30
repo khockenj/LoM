@@ -4,6 +4,7 @@ import SearchPage from '../components/search'
 import HomePage from '../components/home'
 import LoginPage from '../components/login'
 import ProfilePage from '../components/profile'
+import SignupPage from '../components/signup'
 Vue.use(Router)
 
 export default new Router({
@@ -24,14 +25,14 @@ export default new Router({
       component: LoginPage
     },
     {
+      path: '/signup',
+      name: 'Sign Up',
+      component: SignupPage
+    },
+    {
       path: '/profile/:user',
       name: 'Profile',
       component: ProfilePage
     },
-    { 
-      path: '*',
-      name: 'Not Found',
-      component: 'NotFound' 
-  }
   ]
 })

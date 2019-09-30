@@ -7,26 +7,10 @@
         <b-col style="font-size:2rem;text-align:center;padding-bottom:3%">Sign In</b-col>
         </b-row>
     <b-row class="my-1 py-2">
-      <b-col lg="3">
-        <label for="email">Email</label>
-      </b-col>
       <b-col>
-        <b-form-input id='email' type='email'></b-form-input>
+        <b-button style="background-color:#7289da;color:white;" target="_blank" href="/login" block>Sign in with <i style="color:white!important;" class="fab fa-discord"></i>Discord</b-button>
       </b-col>
     </b-row>
-     <b-row class="my-1  py-2">
-      <b-col lg="3">
-        <label for="email">Password</label>
-      </b-col>
-      <b-col>
-        <b-form-input id='password' type='password'></b-form-input>
-      </b-col>
-    </b-row>
-    <b-row class="my-1 py-2" style="padding-bottom:3%;">
-        <b-col>
-           <b-button block variant="info">Sign in</b-button>
-         </b-col>
-        </b-row>
     <b-row class="my-1">
         <b-col lg="6">
            <b-form-checkbox
@@ -39,7 +23,7 @@
     </b-form-checkbox>
          </b-col>
          <b-col>
-        <router-link class="nav-link" style="position:absolute;bottom:0;right:0;" to="/search">Forgot info?</router-link>
+        <router-link class="nav-link" style="position:absolute;bottom:0;right:0;" to="/signup">New user?</router-link>
          </b-col>
         </b-row>
   </b-container>
