@@ -4,7 +4,7 @@
   bg-variant="dark"
     no-body
     style="max-width:15rem;min-width:15rem;border:1px solid white;"
-	:img-src="'/static/squareicons/' + main.toLowerCase() + '_square.png'"
+	:img-src="'/static/squareicons/' + main.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'"
     img-alt="Image"
     img-top
   >

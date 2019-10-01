@@ -8,7 +8,7 @@
         </b-row>
     <b-row class="my-1 py-2">
       <b-col>
-        <b-button style="background-color:#7289da;color:white;" target="_blank" href="/signup" block>Sign up with <i style="color:white!important;" class="fab fa-discord"></i>Discord</b-button>
+        <b-button style="background-color:#7289da;color:white;" href="/login?r=1&m=0" block>Sign up with <i style="color:white!important;" class="fab fa-discord"></i>Discord</b-button>
       </b-col>
     </b-row>
     <b-row>
@@ -24,12 +24,13 @@
          </b-col>
         </b-row>
   </b-container>
-
-  <b-modal @ok="checkCode(mcode)" id="mentorCode">   
+  <b-modal @ok="checkCode" id="mentorCode">   
    <template v-slot:modal-title>
       Mentor Code
     </template>
+    <form ref='form'  @submit.stop.prevent="checkCode">
     <b-form-input v-model="mcode" id="mentor-code" placeholder="Mentor Code" required></b-form-input>
+        </form>
      <b-alert v-model="wrongCode" variant="danger">
       Wrong code
     </b-alert>
@@ -44,27 +45,28 @@ export default {
   data() {
       return {
         mcode: '',
-        wrongCode: false,
+        wrongCode: false
       }
     },
   components: {},
   methods: {
-    checkCode: function(e) {
-    const path = 'http://localhost:5000/api/checkCode/' + this.mcode
+    checkCode: function(bvModalEvt) {
+    const path = 'http://localhost:5000/api/checkCode/' + this.mcode;
+    bvModalEvt.preventDefault();
     axios.get(path)
     .then(response => {
       if(response.data != null && response.data.used == false && response.data.type == "mentor") {
-          e.preventDefault()
-          window.location.href = "/signup";
           this.wrongCode = false;
+          window.location.href = "/login?r=1&mcode=" + this.mcode;
       } else {
-          e.preventDefault()
           this.wrongCode = true;
       }
     })
     .catch(error => {
       console.log(error)
     })
+    
+
     }
   }
   }

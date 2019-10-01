@@ -35,8 +35,16 @@ def index():
 
 @app.route('/login')
 def login():
-    if not request.cookies.get('user') and not request.cookies.get('rememberMe'):
-        return redirect("https://discordapp.com/api/oauth2/authorize?client_id=" + CLIENT_ID + "&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback&response_type=code&scope=guilds.join%20identify%20email")
+    r = request.args.get('r')
+    mcode = request.args.get('mcode')
+    if not request.cookies.get('user') and not request.cookies.get('rememberMe') and r != "1":
+        return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0&response_type=code&scope=identify%20email%20guilds.join")
+    elif not request.cookies.get('user') and not request.cookies.get('rememberMe') and r == "1":
+        if mcode:
+            mongo.db.codes.update({'code': mcode},{'$set':{"used" : True, "usedBy": ''}})
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
+        else:
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
     else:
         user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
         response = make_response(redirect('/#/profile/' + user['name']))
@@ -48,7 +56,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    response = make_response(render_template("index.html"))
+    response = make_response(redirect('/#/login'))
+    #logged out confirm
     response.set_cookie('duser', '', max_age=0)
     response.set_cookie('user', '', max_age=0)
     response.set_cookie('rememberMe', '', max_age=0)
@@ -57,13 +66,15 @@ def logout():
 @app.route('/callback')
 def callback():
     code = request.args.get('code')
+    r = request.args.get('r')
+    m = request.args.get('m')
     headers = {
     'Content-Type': 'application/x-www-form-urlencoded'
   }
     params = {
         "client_id" : CLIENT_ID,
         "client_secret" : CLIENT_SECRET,
-        "redirect_uri" : "http://localhost:5000/callback",
+        "redirect_uri" : "http://localhost:5000/callback?r=" + r + "&m=" + m,
         "grant_type":"authorization_code",
         "code" : code,
         "scope": "identify email guilds.join"
@@ -73,8 +84,45 @@ def callback():
         infoHeaders = {'Authorization': 'Bearer ' + access_token['access_token']}
         info = requests.get('https://discordapp.com/api/users/@me', headers=infoHeaders).json()
         user = mongo.db.users.find_one({"did": info['id']})
-        print(user)
-        response = make_response(redirect('/#/profile/' + user['name']))
+        if r != "1":
+            #regular login
+            if user:
+                response = make_response(redirect('/#/profile/' + user['name']))
+            else:
+                response = make_response(redirect('/#/signup'))
+                #error about needing to register first
+        if r == "1":
+            #sign them up then redirect to fill in profile
+            if m == "1":
+                t = "mentor"
+            else:
+                t = "student"
+            u = {
+            "did":info['id'],
+            "champs":[],
+            "type":t,
+            "achievements":[],
+            "bio":"",
+            "requirements":{},
+            "name":info['username'],
+            "score":0,
+            "socials":{},
+            "rank":"",
+            "main":"",
+            "region":[],
+            "languages":[],
+            "reviewType":[],
+            "moneyType":[],
+            "roles":[],
+            "email":info['email']
+            }
+            if not user:
+                mongo.db.users.insert(u)
+                response = make_response(redirect('/#/editProfile?new=1')) 
+                user = mongo.db.users.find_one({"did": info['id']})
+            else:
+                #already registered error
+                response = make_response(redirect('/#/login'))  
         h = str(hash(user['_id']))
         oneMonth = 60*60*24*31
         oneDay = 60*60*24*1
@@ -83,7 +131,7 @@ def callback():
         response.set_cookie('rememberMe', h, max_age=oneMonth)
         return response
     except:
-        print('error')
+        #unknown error try again
         return make_response(redirect('/#/login'))
 #Here lies the API
 @app.route('/api/profileInfo/<user>')

@@ -5,6 +5,7 @@ import HomePage from '../components/home'
 import LoginPage from '../components/login'
 import ProfilePage from '../components/profile'
 import SignupPage from '../components/signup'
+import EditPage from '../components/editprofile'
 Vue.use(Router)
 
 export default new Router({
@@ -33,6 +34,11 @@ export default new Router({
       path: '/profile/:user',
       name: 'Profile',
       component: ProfilePage
+    },
+    {
+      path: '/editProfile',
+      name: 'Edit Profile',
+      component: EditPage
     },
   ]
 })
