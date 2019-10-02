@@ -93,19 +93,33 @@ export default {
 		  { value: 'professional', text: 'Professional', disabled: true }
         ],
     champOptions: this.$parent.championsList(),
-	regionOptions: [
-		  { value: 'na', text: 'NA' },
-          { value: 'euw', text: 'EUW' },
-          { value: 'kr', text: 'KR' },
-          { value: 'cn', text: 'CN'},
-		  { value: 'garen', text: 'Garena'}
+	          regionOptions: [
+		      	{ value: 'na', text: 'NA' },
+				{ value: 'euw', text: 'EUW' },
+				{ value: 'eune', text: 'EUNE' },
+				{ value: 'br', text: 'BR' },
+				{ value: 'kr', text: 'KR' },
+				{ value: 'lan', text: 'LAN'},
+				{ value: 'las', text: 'LAS'},
+				{ value: 'oce', text: 'OCE'},
+				{ value: 'ru', text: 'RU'},
+				{ value: 'tr', text: 'TR'},
+				{ value: 'jp', text: 'JP'},
+				{ value: 'cn', text: 'CN'},
+		      	{ value: 'garena', text: 'Garena'}
 		  ],
 	languageOptions: [
 		  { value: 'english', text: 'English' },
           { value: 'korean', text: 'Korean' },
           { value: 'spanish', text: 'Spanish' },
-          { value: '', text: 'ab'},
-		  { value: '', text: 'cd'}	
+          { value: 'mandarin', text: 'Chinese (Mandarin)'},
+		  { value: 'cantonese', text: 'Chinese (Cantonese)'},
+		  { value: 'russian', text: 'Russian'},
+		  { value: 'portuguese', text: 'Portuguese'},
+		  { value: 'french', text: 'French'},
+		  { value: 'japanese', text: 'Japanese'},
+		  { value: 'german', text: 'German'},
+		  { value: 'italian', text: 'Italian'},
 	],
 	reviewOptions: [
 		  { value: 'live', text: 'Live' },
@@ -161,7 +175,7 @@ export default {
 		&& ((vm.moneyFilter == null) || (x.moneyTypes.includes(vm.moneyFilter)))
 		&& ((vm.reviewFilter == null) || (x.reviewTypes.includes(vm.reviewFilter)))
 		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter)))
-		&& ((vm.roleFilter == null) || (x.champs.includes(vm.roleFilter)))
+		&& ((vm.roleFilter == null) || (x.roles.includes(vm.roleFilter)))
 		) {
 			ret.push(x);
 		}
@@ -172,7 +186,7 @@ export default {
     const path = 'http://localhost:5000/api/profileInfo/' + "MENTORS"
     axios.get(path)
     .then(response => {
-      this.list = response.data;
+	  this.list = response.data;
     })
     .catch(error => {
       console.log(error)

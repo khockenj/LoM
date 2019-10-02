@@ -17,7 +17,6 @@ mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
 def index():
-    generateCode()
     if request.cookies.get('user') and request.cookies.get('duser'):
         loggedIn = True
     elif request.cookies.get('rememberMe') and request.cookies.get('duser'):
