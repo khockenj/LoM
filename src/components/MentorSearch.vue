@@ -172,8 +172,8 @@ export default {
 		&& (vm.convertRank(x.rank) >= vm.convertRank(vm.rankFilter))
 		&& ((vm.regionFilter == null) || (x.region.includes(vm.regionFilter)))
 		&& ((vm.languageFilter == null) || (x.languages.includes(vm.languageFilter)))
-		&& ((vm.moneyFilter == null) || (x.moneyTypes.includes(vm.moneyFilter)))
-		&& ((vm.reviewFilter == null) || (x.reviewTypes.includes(vm.reviewFilter)))
+		&& ((vm.moneyFilter == null) || (x.moneyType.includes(vm.moneyFilter)))
+		&& ((vm.reviewFilter == null) || (x.reviewType.includes(vm.reviewFilter)))
 		&& ((vm.champFilter == null) || (x.champs.includes(vm.champFilter)))
 		&& ((vm.roleFilter == null) || (x.roles.includes(vm.roleFilter)))
 		) {
