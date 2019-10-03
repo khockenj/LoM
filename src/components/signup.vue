@@ -51,7 +51,7 @@ export default {
   components: {},
   methods: {
     checkCode: function(bvModalEvt) {
-    const path = 'http://localhost:5000/api/checkCode/' + this.mcode;
+    const path = '/api/checkCode/' + this.mcode;
     bvModalEvt.preventDefault();
     axios.get(path)
     .then(response => {
