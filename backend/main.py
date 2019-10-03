@@ -12,7 +12,9 @@ app = Flask(__name__,
             static_folder = "../dist/static",
             template_folder = "../dist")
 CORS(app)
-app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
+#app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
+app.config["MONGO_URI"] = "mongodb+srv://admin:KjhKrK2017<3@lom-wlgkz.gcp.mongodb.net/admin?retryWrites=true&w=majority")
+
 mongo = PyMongo(app)     
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
