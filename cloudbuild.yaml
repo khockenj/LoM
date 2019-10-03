@@ -1,9 +1,0 @@
-steps:
-- name: node:12.10.0
-  entrypoint: npm
-  args: ["install"]
-- name: node:12.10.0
-  entrypoint: npm
-  args: ["run", "build"]
-- name: "gcr.io/cloud-builders/gcloud"
-  args: ["app", "deploy"]
