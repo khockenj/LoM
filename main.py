@@ -130,6 +130,8 @@ def callback():
                 user = mongo.db.users.find_one({"did": info['id']})
             else:
                 #already registered error
+                print(user)
+                print('already registered')
                 response = make_response(redirect('/#/login'))  
         h = str(hash(user['_id']))
         oneMonth = 60*60*24*31
