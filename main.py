@@ -16,7 +16,9 @@ app = Flask(__name__,
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
-
+port = "5000"
+#prodOrLocal = "http://localhost:" + port + "/"
+prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
@@ -81,14 +83,15 @@ def callback():
     params = {
         "client_id" : CLIENT_ID,
         "client_secret" : CLIENT_SECRET,
-        #"redirect_uri" : "http://localhost:5000/?r=" + r + "&m=" + m,
-        "redirect_uri" : "https://lom-website-253818.appspot.com/?r=" + r + "&m=" + m,
+        "redirect_uri" : prodOrLocal + "callback?r=" + r + "&m=" + m,
         "grant_type":"authorization_code",
         "code" : code,
         "scope": "identify email guilds.join"
         }
+    print(prodOrLocal + "?r=" + r + "&m=" + m)
     try:
         access_token = requests.post('https://discordapp.com/api/oauth2/token', data=params, headers=headers).json()
+        print(access_token)
         infoHeaders = {'Authorization': 'Bearer ' + access_token['access_token']}
         info = requests.get('https://discordapp.com/api/users/@me', headers=infoHeaders).json()
         user = mongo.db.users.find_one({"did": info['id']})
@@ -130,8 +133,6 @@ def callback():
                 user = mongo.db.users.find_one({"did": info['id']})
             else:
                 #already registered error
-                print(user)
-                print('already registered')
                 response = make_response(redirect('/#/login'))  
         h = str(hash(user['_id']))
         oneMonth = 60*60*24*31

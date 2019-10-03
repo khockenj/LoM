@@ -183,6 +183,7 @@ export default {
 	this.mentors = ret;
   },
     getData: function() {
+	//const path = 'http://localhost:5000/api/profileInfo/' + "MENTORS"
     const path = '/api/profileInfo/' + "MENTORS"
     axios.get(path)
     .then(response => {
