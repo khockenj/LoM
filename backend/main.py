@@ -6,6 +6,7 @@ from flask_cors import CORS, cross_origin
 import base64
 import requests
 import random, string
+import dns
 CLIENT_SECRET ="hx984-Qq67PLmssoCtcUBhLEHrXP74gG"
 CLIENT_ID = "628252746365140999"
 app = Flask(__name__,
