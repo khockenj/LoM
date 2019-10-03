@@ -14,9 +14,9 @@ app = Flask(__name__,
             template_folder = "../dist")
 CORS(app)
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
-app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/admin?retryWrites=true&w=majority"
+app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 
-mongo = PyMongo(app)     
+mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
 def index():
@@ -24,7 +24,7 @@ def index():
         loggedIn = True
     elif request.cookies.get('rememberMe') and request.cookies.get('duser'):
         response = make_response(render_template('index.html'))
-        user = mongo.db.users.findOne({"did": request.cookies.get("duser")})
+        user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
         h = hash(user._id)
         response.set_cookie('duser', user.did, max_age=60*60*24*31)
         response.set_cookie('user', h, max_age=60*60*24*1)
