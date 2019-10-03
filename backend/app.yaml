@@ -1,9 +1,16 @@
 runtime: python
 env: flex
 entrypoint: gunicorn -b :$PORT main:app
+url: ../dist
+static_dir: ../dist/static
 
 runtime_config:
     python_version: 3
 
 env_variables:
     CLOUD_STORAGE_BUCKET: league-of-mentoring
+
+james:
+    BITCH: true
+    JOKER?: true
+
