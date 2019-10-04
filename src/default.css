@@ -36,7 +36,7 @@
 }
 .star{
 	color:#ffc107 !important;
-	font-size:24px;
+	font-size:calc(12px + 1vw);
 }
 .fab {
 	padding-left:.25rem;

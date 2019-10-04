@@ -3,17 +3,19 @@
 <div class="overlay"></div>
 <div>
   <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
-    <i class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i>
-    <i class="fas fa-info-circle" style="position:absolute; left:.6rem; top:4rem;" v-b-modal.info></i>
-    <template v-slot:header>{{profileData.name}}<img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" /></template>
-    <div><i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(profileData.score-Math.floor(profileData.score))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(profileData.score)+customRound(profileData.score-Math.floor(profileData.score))[1]"></i></div>
-    <div style="font-size:24px;position:absolute;right:.6rem;;top:11rem;">
+     <div style="display:flex;">
+    <div style="flex-grow:12;"><i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(profileData.score-Math.floor(profileData.score))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(profileData.score)+customRound(profileData.score-Math.floor(profileData.score))[1]"></i></div>
+    <div class="iconHolder" style="flex-grow:0;">
       <a v-if="profileData.socials.twitch" :href="'https://www.twitch.tv/' + profileData.socials.twitch"><i class="fab fa-twitch"></i></a>
       <a v-if="profileData.socials.youtube" :href="'https://www.youtube.com/user/' + profileData.socials.youtube"><i class="fab fa-youtube"></i></a>
       <a v-if="profileData.socials.discord" :href="'https://discord.gg/' + profileData.socials.discord"><i class="fab fa-discord"></i></a>
       <a v-if="profileData.socials.twitter" :href="'https://www.twitter.com/' + profileData.socials.twitter"><i class="fab fa-twitter"></i></a>
       <a v-if="profileData.socials.patreon" :href="'https://www.patreon.com/' + profileData.socials.patreon"><i class="fab fa-patreon"></i></a>
       </div>
+      </div>
+    <i class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i>
+    <i class="fas fa-info-circle" style="position:absolute; left:.6rem; top:4rem;" v-b-modal.info></i>
+    <template v-slot:header>{{profileData.name}}<img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" /></template>
   </b-jumbotron>
 </div>
 <b-container style="max-width:1200px">
@@ -171,6 +173,11 @@ export default {
 	max-width:96px;
 	max-height:96px;
 	vertical-align: middle;
+}
+
+.iconHolder {
+  text-align:right;
+  font-size:calc(12px + .6vw);
 }
 
 </style>
