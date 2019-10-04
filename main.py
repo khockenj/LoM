@@ -12,7 +12,7 @@ CLIENT_ID = "628252746365140999"
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-#CORS(app)
+CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
@@ -145,15 +145,26 @@ def callback():
         #unknown error try again
         return make_response(redirect('/#/login'))
 #Here lies the API
-@app.route('/api/profileInfo/<user>')
+@app.route('/api/profileInfo/<user>', methods=['GET', 'POST'])
 def profileInfo(user):
-    if user == "MENTORS":
-        prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'password': 0, 'type': 0 })
-        response = json.dumps([mentor for mentor in prep], default=json_util.default)
+    if request.method == 'GET':
+        if user == "MENTORS":
+            prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'password': 0, 'type': 0 })
+            response = json.dumps([mentor for mentor in prep], default=json_util.default)
+        else:
+            response = json.dumps(mongo.db.users.find_one({ "$text": { "$search": user } },  { 'ip': 0, 'password': 0 }), default=json_util.default)
+        return response
     else:
-        response = json.dumps(mongo.db.users.find_one({ "$text": { "$search": user } },  { 'ip': 0, 'password': 0 }), default=json_util.default)
-    return response
-
+        data = request.get_json()
+        newData = data.copy()
+        newData.pop('did', None)
+        try:
+            print(newData)
+            print(data['did'])
+            mongo.db.users.update({'did': data['did']},{'$set':newData})
+            return "true"
+        except:
+            return "false"
 @app.route('/api/checkCode/<code>')
 def checkCode(code):
     prep = mongo.db.codes.find_one({"code": code})

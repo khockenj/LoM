@@ -146,6 +146,7 @@ export default {
           socialName: '',
           socialsList: [],
           socialMedia: '',
+          selectedRoles: [],
 }
   },
   methods: {
@@ -172,6 +173,7 @@ export default {
           this.makeToast('Error', 'You cannot add the same champion twice.', "danger")
         }
         this.champs = null;
+        this.$emit('champs', this.removedChamps)
     },
     deleteRow: function(c, type) {
         if(type =='champ') {
@@ -219,6 +221,7 @@ export default {
         this.account = null;
         this.region = null;
       }
+      console.log(this.accountList);
     },
     socialsAdd: function(sm){
         if(this.socialsList.includes(sm)) {
@@ -226,7 +229,11 @@ export default {
         } else {
         this.socialsList.push(sm);
         }
+        console.log(this.socialsList);
     },
+  },
+  mounted() {
+     
   }
 }
 </script>
