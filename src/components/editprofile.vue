@@ -22,17 +22,20 @@
      </b-row>
      <b-form-group>
 
-       <b-row v-if="removedChamps.length > 0">
-         <b-col lg="3" style='padding:12px;'>Champion</b-col>
-         <b-col style='padding:12px;'>Main</b-col>
-         <b-col style='padding:12px;'>Remove</i></b-col>
-         </b-row>
+      
+     <b-row style='padding-top:1rem;'>
+         
+        <span v-for="x in removedChamps" :key=x>
+         <b-col v-if="x == main" class="py-3" style="background-color:#28a745;max-width:100%;" lg="2"> 
+        <img v-on:click='setMain(x)' v-b-tooltip.hover title="Your main" style="max-width:128px;" :src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" />
+         <i style="font-size:24px;" :value='x' class="fas fa-trash-alt deleteChamp" :v-model='x' v-on:click="deleteRow(x, 'champ')"></i>
+         </b-col>
 
-     <b-row v-for="x in removedChamps" :key=x>
-         <b-col lg="1"><img style="max-width:48px":src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" /></b-col>
-         <b-col lg="2">{{x}}</b-col>
-         <b-col style='padding:12px;'><b-form-radio v-model="main" :value='x'></b-form-radio></b-col>
-         <b-col style='padding:12px;'><i style="font-size:24px;" :value='x' class="fas fa-trash-alt red delete" :v-model='x' v-on:click="deleteRow(x, 'champ')"></i></b-col>
+         <b-col v-if="x != main" class="py-3" lg="2" style="max-width:100%;"> 
+         <img v-on:click='setMain(x)' style="max-width:128px;" :src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" />
+         <i style="font-size:24px;" :value='x' class="fas fa-trash-alt deleteChamp" :v-model='x' v-on:click="deleteRow(x, 'champ')"></i>
+         </b-col>
+         </span>
          </b-row>
             </b-form-group>
 <b-form-group>
@@ -99,25 +102,91 @@
       </b-col>
     <b-col lg="1"><i style="font-size:24px;" :value='socials' class="fas fa-trash-alt red delete" v-on:click="deleteRow(socials, 'social')"></i></b-col>
   </b-row>
-  <mentor-section v-if="true"/>
+ 
+  <!--Mentor-->
+  <span v-if='true'>
+  <b-row>
+    <b-col lg="12" style="text-align:left;"><h2>Mentor Stuff</h2></b-col>
+    </b-row>
+  <b-row>
+    <b-col lg="2" style="text-align:left;"><label for="aboutme">Your Bio:</label></b-col>
+    <b-col><b-form-textarea
+        id="aboutme"
+        rows="5"
+        v-model='aboutMe'
+        placeholder="Hello I'm K3Vx and I once solo killed Faker..."
+      ></b-form-textarea>
+      </b-col>
+  </b-row>
+  <b-row class="py-2">
+    <b-col lg="2" style="text-align:left;"><label for="aboutme">Your Achievements <i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Seperate achievements by comma"></i>:</label></b-col>
+    <b-col><b-form-textarea
+        id="aboutme"
+        v-model='achievements'
+        rows="5"
+        placeholder="Dabbed on Uzi(please seperate by comma),
+Beat Doublelift in arm wrestling"
+      ></b-form-textarea>
+      </b-col>
+  </b-row>
+  <b-row>
+  <b-col lg="2" style="text-align:left;"><label for="yourreview">Review Types:</label></b-col>
+    <b-col style="text-align:left;">
+      <b-form-checkbox-group
+        id="yourreview"
+        v-model="selectedReview"
+        :options="reviewOptions"
+        name="yourreview"
+      ></b-form-checkbox-group>
+    </b-col>
+  </b-row>
+
+  <b-row>
+  <b-col lg="2" style="text-align:left;"><label for="yourmoney">Free/Paid:</label></b-col>
+    <b-col style="text-align:left;">
+      <b-form-checkbox-group
+        id="yourmoney"
+        v-model="selectedMoney"
+        :options="moneyOptions"
+        name="yourmoney"
+      ></b-form-checkbox-group>
+    </b-col>
+  </b-row>
+
+  <b-row>
+  <b-col lg="2" style="text-align:left;"><label for="yourreq">Requirements:</label></b-col>
+    <b-col style="text-align:left;">
+      [placeholder]
+    </b-col>
+  </b-row>
+  </span>
+
   <b-row v-if="false">
     <b-col lg="2" style="text-align:left;"><label for="yourgoals">Your Goals:</label></b-col>
     <b-col style='text-align:left'>[placeholder]</b-col>
   </b-row>
   <b-row class="py-2"><b-col>
     <b-button v-if="this.$route.query.new == '1'" v-on:click='setData' variant="info" block>Create your Profile</b-button>
-    <b-button v-if="this.$route.query.new != '1'" variant="info" block>Update Information</b-button>
+    <b-button v-if="this.$route.query.new != '1'" v-on:click='setData' variant="info" block>Update Information</b-button>
     </b-col></b-row>
   </b-container>
 </div>
 </template>
 <script>
 import axios from 'axios'
-import EditProfileMentor from './EditProfileMentor'
 export default {
   name: 'EditPage',
   data() {
       return {
+         reviewOptions: [
+		  { value: 'live', text: 'Live' },
+          { value: 'private', text: 'Private' },
+          { value: 'written', text: 'Written' },
+	      ],
+      	moneyOptions: [
+		 { value: 'free', text: 'Free' },
+          { value: 'paid', text: 'Paid' },
+          ],
           regionOptions: [
 		  { value: 'na', text: 'NA' },
           { value: 'euw', text: 'EUW' },
@@ -153,12 +222,17 @@ export default {
           { value: 'adc', text: 'ADC'},
 		      { value: 'support', text: 'Support'}	
         ],
+        selectedMoney: [],
+        selectedReview: [],
+        aboutMe: '',
+        achievements:'',
         socialsOptions: ['twitch', 'youtube', 'discord', 'twitter', 'patreon'],
         twitch:'',
         youtube:'',
         discord:'',
         twitter:'',
         patreon:'',
+        goals: '',
           champions: this.championsList(),
           removedChamps: [],
           main: null,
@@ -174,10 +248,11 @@ export default {
           finalSocial: {},
           selectedRoles: [],
           regionList: [],
+          userData: {}
       }
     },
   components: {
-    'mentor-section': EditProfileMentor,
+    
   },
   methods: {
 	championsList: function() {	
@@ -192,7 +267,7 @@ export default {
         if(this.removedChamps.length == 0){
           this.main = this.champs
         }
-        var perfectName = this.champs.toLowerCase().replace(/^\w/, c => c.toUpperCase());
+        var perfectName = this.champs.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
         if(this.removedChamps.length <= 5 && this.champions.includes(perfectName) && !this.removedChamps.includes(this.champs)) {
           this.removedChamps.push(perfectName);
         }
@@ -259,6 +334,9 @@ export default {
         }
         console.log(this.socialsList);
   },
+  setMain: function(newMain){
+    this.main = newMain;
+  },
    setData: function() {
     var vm = this;
     this.accountList.forEach(function(x) {
@@ -279,14 +357,60 @@ export default {
       'main': this.main,
       //'mainAccount': this.mainAccount
     };
-    axios.post(path, data)
+    let data2 = {};
+    //mentor student
+    if(true) {
+      //mentor
+      data2 = {
+        'bio': this.aboutMe,
+        'achievements': (this.achievements).split(","),
+        'reviewType': this.selectedReview,
+        'moneyType': this.selectedMoney
+        //'requirements': this.requirements
+      }
+    } else {
+      data2 = {
+        'goals': ''
+      }
+    }
+    axios.post(path, Object.assign({}, data, data2))
     .then(response => {
       console.log(response);
+      window.scrollTo(0, 0);
+      this.makeToast('Updated', 'You have saved your profile.', 'success')
     })
     .catch(error => {
       console.log(error)
     })
   },
+  getData:function() {
+    const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
+    //const path = '/api/profileInfo/' + 'K3Vx'
+    axios.get(path)
+    .then(response => {
+      this.removedChamps = response.data.champs;
+      this.main = response.data.main;
+      this.accountList = response.data.accounts;
+      this.selectedRoles = response.data.roles;
+      this.socialsList = Object.keys(response.data.socials)
+      for(const[k,v] of Object.entries(response.data.socials)) {
+        this[k]=v; 
+      }
+      this.aboutMe = response.data.bio;
+      this.selectedMoney = response.data.moneyType;
+      this.selectedReview = response.data.reviewType;
+      this.achievements = response.data.achievements.join(',')
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
+  },
+  mounted: function(){
+    if(this.$route.query.new != '1') {
+      this.getData();
+    }
   }
 }
 </script>
@@ -315,7 +439,13 @@ border-radius:5rem;
 background-color:#32383E;
 }
 
-.delete:hover{
+.deleteChamp {
+position:absolute;
+top:1.25rem;
+right:1rem;
+opacity:.75;
+}
+.delete:hover, .deleteChamp:hover{
 color:red;
 }
 h5 {

@@ -58,3 +58,13 @@
 .fa-youtube:hover{
 	color:#b2071d;
 }
+
+.textIcon {
+	color:inherit;
+	font-size:inherit;
+}
+.textIcon:hover {
+	color:inherit;
+	font-size:inherit;
+	cursor:default;
+}

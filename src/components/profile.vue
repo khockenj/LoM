@@ -128,9 +128,9 @@ export default {
         return [0,0];
       }
     },
-    save: function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    const path = '/api/profileInfo/' + this.$route.params.user
+    getData: function() {
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    //const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
