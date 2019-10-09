@@ -114,6 +114,7 @@ export default {
           { value: 'spanish', text: 'Spanish' },
           { value: 'mandarin', text: 'Chinese (Mandarin)'},
 		  { value: 'cantonese', text: 'Chinese (Cantonese)'},
+		            { value: 'danish', text: 'Danish'},
 		  { value: 'russian', text: 'Russian'},
 		  { value: 'portuguese', text: 'Portuguese'},
 		  { value: 'french', text: 'French'},

@@ -14,8 +14,8 @@
     <label for="yourchamps">Your Champions:</label>
     </b-col>
     <b-col lg="10">
-    <b-form-input id='yourchamps' v-on:change='updateList' list="champions" v-model="champs"></b-form-input>
-    <datalist autocomplete='off' id="champions">
+    <b-form-input id='yourchamps' v-on:change='updateList' list='champions' v-model="champs"></b-form-input>
+    <datalist autocomplete='off' class='champions'>
     <option :key='c' v-for="c in champions" :value='c'>{{c}}</option>
   </datalist>
         </b-col>
@@ -37,9 +37,9 @@
             </b-form-group>
 <b-form-group>
   <b-row style='padding-bottom:1rem'>
-    <b-col lg="2" style="text-align:left;"><label for="youracc">Add Accounts:</label></b-col>
-    <b-col lg="4"><b-form-input id='youracc' v-model="account" placeholder="Account Name"></b-form-input></b-col>
-    <b-col lg="2">
+    <b-col lg="2" class='py-1' style="text-align:left;"><label for="youracc">Add Accounts:</label></b-col>
+    <b-col lg="4"  class='py-1' ><b-form-input id='youracc' v-model="account" placeholder="Account Name"></b-form-input></b-col>
+    <b-col lg="2"  class='py-1' >
       <b-form-select id='youracc' v-model="region" :options="regionOptions">
         <template v-slot:first>
           <option disabled :value="null">Region</option>
@@ -95,11 +95,16 @@
       ></b-form-checkbox-group>
     </b-col>
   </b-row>
-<b-row>
+<b-row style='align-items: center;'>
     <b-col lg="2" style="text-align:left;"><label for="yourlang">Language(s):</label></b-col>
-    <b-col style="text-align:left;">
-      [placeholder]
+    <b-col lg="2" style="text-align:left;">
+       <b-form-select id='yourlang' v-on:change='addLang(selectedLang)' v-model="selectedLang" :options="languageOptions">
+        <template v-slot:first>
+          <option disabled :value="null">Language</option>
+        </template>
+        </b-form-select>
     </b-col>
+    <b-col lg="8" style='text-align:left;'><b-badge v-on:click='removeLang(l)' class='mx-1 lang' :key='l' v-for='l in languages' variant='primary'>{{l.toUpperCase()}}</b-badge></b-col>
   </b-row>
 
   <!--Mentor-->
@@ -155,9 +160,16 @@ Beat Doublelift in arm wrestling"
   <b-row>
   <b-col lg="2" style="text-align:left;"><label for="yourreq">Requirements:</label></b-col>
     <b-col style="text-align:left;">
-      [placeholder]
+      <b-form-select id='yourreq' v-model="selectedReq" v-on:change='addReq' :options="reqOptions">
+        <template v-slot:first>
+          <option disabled :value="null">Requirement</option>
+        </template>
+        </b-form-select>
     </b-col>
   </b-row>
+  <b-row v-for='r in requirements'>
+    <b-col></b-col>
+    </b-row>
   </span>
 
   <b-row v-if="false">
@@ -200,13 +212,22 @@ export default {
           { value: 'jp', text: 'JP'},
           { value: 'cn', text: 'CN'},
 		      { value: 'garena', text: 'Garena'}
-		  ],
+      ],
+      reqOptions: [,
+          { value: 'gamesPlayed', text: 'Games Played' },
+          { value: 'rank', text: 'Rank' },
+          { value: 'roleMatch', text: 'Role Match' },
+          { value: 'serverMatch', text: 'Server Match' },
+          { value: 'champMatch', text: 'Champ Match'},
+          { value: 'langMatch', text: 'Language Match'}
+      ],
 	       languageOptions: [
 		  { value: 'english', text: 'English' },
           { value: 'korean', text: 'Korean' },
           { value: 'spanish', text: 'Spanish' },
           { value: 'mandarin', text: 'Chinese (Mandarin)'},
           { value: 'cantonese', text: 'Chinese (Cantonese)'},
+          { value: 'danish', text: 'Danish'},
           { value: 'russian', text: 'Russian'},
           { value: 'portuguese', text: 'Portuguese'},
           { value: 'french', text: 'French'},
@@ -224,6 +245,8 @@ export default {
         ],
         selectedMoney: [],
         selectedReview: [],
+        selectedLang: null,
+        selectedReq: null,
         aboutMe: '',
         achievements:'',
         socialsOptions: ['twitch', 'youtube', 'discord', 'twitter', 'patreon'],
@@ -233,6 +256,15 @@ export default {
         twitter:'',
         patreon:'',
         goals: '',
+        languages: [],
+          requirements: {
+            "serverMatch":  false,
+            "roleMatch":  false,
+            "langMatch":  false,
+            "champMatch": false,
+            "gamesPlayed": null,
+            "rank": null
+          },
           champions: this.championsList(),
           removedChamps: [],
           main: null,
@@ -339,6 +371,28 @@ export default {
   setMainAccount: function(newMain){
     this.mainAccount = newMain;
   },
+  addLang: function(lang) {
+    if(!this.languages.includes(lang)){
+      this.languages.push(lang);
+    } else {
+      this.makeToast('Error', 'You cannot add the same language twice.', 'danger')
+    }
+    this.selectedLang = null;
+  },
+  removeLang: function(lang){
+    var index = this.languages.indexOf(lang);
+    this.languages.splice(index, 1);
+  },
+  addReq: function() {
+    if(this.selectedReq == 'roleMatch' || this.selectedReq == 'champMatch' || this.selectedReq == 'serverMatch' || this.selectedReq == 'langMatch') {
+      this.requirements[this.selectedReq] = true;
+    } else if(this.selectedReq == 'gamesPlayed') {
+      this.requirements[this.selectedReq] = {'games': 0, 'days': 0}
+    } else if(this.selectedReq == 'rank') {
+      this.requirements[this.selectedReq] = {'minmax': 'min', 'rank': ''}
+    }
+    console.log(this.requirements);
+  },
    setData: function() {
     var vm = this;
     this.accountList.forEach(function(x) {
@@ -357,7 +411,8 @@ export default {
       'region': [...new Set(this.regionList)],
       'accounts': this.accountList,
       'main': this.main,
-      'mainAccount': this.mainAccount
+      'mainAccount': this.mainAccount,
+      'languages': this.languages
     };
     let data2 = {};
     //mentor student
@@ -396,6 +451,7 @@ export default {
       this.accountList = response.data.accounts;
       this.selectedRoles = response.data.roles;
       this.mainAccount = response.data.mainAccount;
+      this.languages = response.data.languages;
       this.socialsList = Object.keys(response.data.socials)
       for(const[k,v] of Object.entries(response.data.socials)) {
         this[k]=v; 
@@ -416,6 +472,7 @@ export default {
     if(this.$route.query.new != '1') {
       this.getData();
     }
+    var relink = document.getElementsByClassName('champions')[0].id = 'champions';
   }
 }
 </script>
@@ -478,10 +535,17 @@ label {
 
 .accounts {
   background-color:#636d7b;
+  cursor:pointer;
 }
 .accounts:hover{
     background-color:#3f464e;
 }
-.img-holder {position: relative; display: inline-block;}
+.img-holder {position: relative; display: inline-block;cursor:pointer;}
 .img-holder img {display: block;}
+.lang {
+  cursor: pointer;
+}
+.lang:hover {
+background-color:#dc3545;
+}
 </style>
