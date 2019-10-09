@@ -135,7 +135,8 @@ export default {
           { value: 'jungle', text: 'Jungle' },
           { value: 'middle', text: 'Middle' },
           { value: 'adc', text: 'ADC'},
-		  { value: 'support', text: 'Support'}	
+		  { value: 'support', text: 'Support'},
+		  { value: 'teams', text: 'Teams'}	
 	]
   }
   },
@@ -183,11 +184,12 @@ export default {
 	this.mentors = ret;
   },
     getData: function() {
-	//const path = 'http://localhost:5000/api/profileInfo/' + "MENTORS"
-    const path = '/api/profileInfo/' + "MENTORS"
+	const path = 'http://localhost:5000/api/profileInfo/' + "MENTORS"
+    //const path = '/api/profileInfo/' + "MENTORS"
     axios.get(path)
     .then(response => {
 	  this.list = response.data;
+	  this.mentors = response.data;
     })
     .catch(error => {
       console.log(error)
@@ -198,7 +200,6 @@ export default {
   
   },
   ready: function(){
-
   }, 
   watch: {},
   mounted: function() {

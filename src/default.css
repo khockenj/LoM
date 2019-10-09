@@ -47,24 +47,51 @@
 .fab:hover {
 	color:#FFF;
 }
+.fa-twitch {
+	color:#6441a5;
+}
+
 .fa-twitch:hover {
 	color:#6441a5;
+}
+
+.fa-twitter {
+	color:#26a7de;
 }
 
 .fa-twitter:hover {
 	color:#26a7de;
 }
 
+.fa-youtube{
+	color:#b2071d;
+}
+
 .fa-youtube:hover{
 	color:#b2071d;
 }
 
+.fa-discord {
+	color:#BEBEBE;
+}
+.fa-discord:hover {
+	color:#BEBEBE;
+}
+
+.fa-patreon {
+	color:#BEBEBE;
+}
+.fa-patreon:hover {
+	color:#BEBEBE;
+}
 .textIcon {
 	color:inherit;
-	font-size:inherit;
+	font-size:16px;
+	padding-left:.2rem;
+	padding-right:.2rem;
 }
 .textIcon:hover {
 	color:inherit;
-	font-size:inherit;
+	font-size:16px;
 	cursor:default;
 }

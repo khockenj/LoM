@@ -23,24 +23,21 @@
      <b-form-group>
 
       
-     <b-row style='padding-top:1rem;'>
-         
-        <span v-for="x in removedChamps" :key=x>
-         <b-col v-if="x == main" class="py-3" style="background-color:#28a745;max-width:100%;" lg="2"> 
-        <img v-on:click='setMain(x)' v-b-tooltip.hover title="Your main" style="max-width:128px;" :src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" />
+     <b-row class='mx-auto' style='padding-top:1rem;text-align:center;'>
+         <b-col v-for="x in removedChamps" :key=x class="py-3" lg="2" style="max-width:100%;justify-content: space-between;position:relative;"> 
+         <div class='img-holder'>
+           <img v-on:click='setMain(x)' style="max-width:128px;position:relative;" :src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" />
          <i style="font-size:24px;" :value='x' class="fas fa-trash-alt deleteChamp" :v-model='x' v-on:click="deleteRow(x, 'champ')"></i>
-         </b-col>
-
-         <b-col v-if="x != main" class="py-3" lg="2" style="max-width:100%;"> 
-         <img v-on:click='setMain(x)' style="max-width:128px;" :src="'/static/squareicons/' + x.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" />
-         <i style="font-size:24px;" :value='x' class="fas fa-trash-alt deleteChamp" :v-model='x' v-on:click="deleteRow(x, 'champ')"></i>
+          <b-badge v-if="x == main" class='badgeChamp' variant='success'>MAIN</b-badge>
+         </div>
+        
          </b-col>
          </span>
          </b-row>
             </b-form-group>
 <b-form-group>
-  <b-row>
-    <b-col lg="2" style="text-align:left;"><label for="youracc">Your Accounts:</label></b-col>
+  <b-row style='padding-bottom:1rem'>
+    <b-col lg="2" style="text-align:left;"><label for="youracc">Add Accounts:</label></b-col>
     <b-col lg="4"><b-form-input id='youracc' v-model="account" placeholder="Account Name"></b-form-input></b-col>
     <b-col lg="2">
       <b-form-select id='youracc' v-model="region" :options="regionOptions">
@@ -51,24 +48,44 @@
         </b-col>
     <b-col lg="4"><b-button variant="success" block v-on:click='updateAccounts'>Add</b-button></b-col>
   </b-row>
-  <b-row v-if="accountList.length > 0">
-         <b-col lg="3" style='padding:12px;'>Account</b-col>
-         <b-col style='padding:12px;'>Region</b-col>
-         <b-col style='padding:12px;'>Main?</b-col>
-         <b-col style='padding:12px;'>Remove</i></b-col>
-         </b-row>
+  <b-row style='padding-bottom:1rem'>
+    <b-col lg="2" style="text-align:left;"><label for="youracc">Add Socials<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Click one to add!"></i></label></b-col>
+    <b-col style='text-align:left;'><i v-on:click='socialsAdd(social)' v-for="social in socialsOptions" :class="'fab fa-' + social" :id='social'></i></b-col>
+      </b-row>
+  </b-form-group>
   
-  <b-row :key='a.id' v-for='a in accountList'>
-         <b-col>{{a.name}}</b-col>
-         <b-col>{{a.region.toUpperCase()}}</b-col>
-         <b-col style='padding:12px;'><b-form-radio v-model="mainAccount" :value='a.id'></b-form-radio></b-col>
-         <b-col style='padding:12px;'><i style="font-size:24px;" :value='a.id' class="fas fa-trash-alt red delete" :v-model='a.id' v-on:click="deleteRow(a, 'account')"></i></b-col>
+  <div style="display:flex;">
+  <b-container style='width:50%;'>
+  <b-row style='align-items: center;'><b-col lg='12' class='border border-dark rounded'><h5>Your Accounts<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Click an account to assign a main"></i></h5></b-col></b-row>
+  <b-row style='align-items: center;height:54.5px;' class='py-1 accounts border border-dark rounded' v-on:click='setMainAccount(a.id)' :key='a.id' v-for='a in accountList'>
+         <b-col lg='12' style="text-align:left;">{{a.name}} <b-badge class='mx-1' variant='info'>{{a.region.toUpperCase()}}</b-badge><b-badge class='mx-1' v-if='a.id == mainAccount' variant='success'>Main</b-badge><i style="font-size:20px;" :value='a.id' class="fas fa-trash-alt red delete px-1" :v-model='a.id' v-on:click="deleteRow(a, 'account')"></i></b-col>
          </b-row>
-            </b-form-group>
+  </b-container>
+  <b-container style='width:50%;'>
+  <b-row style='align-items: center;'><b-col lg='12' class='border border-dark rounded'>
+      <h5>Your Socials</h5>
+    </b-col></b-row>
+    <b-row style='align-items: center;' class="py-1 accounts border border-dark rounded" :key='socials' v-for="socials in socialsList">
+    <b-col lg="1"><i style='padding-left:0;' :class="'fab fa-' + socials + ' no-hover py-1'"></i></b-col>
+    <b-col lg="10" style='align-items: center;'>
+      <!--Not ideal, not sure a way around it though zzz-->
+      <b-form-input class='mx-2 my-1' v-if="socials == 'twitch'" v-model='twitch' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
+      <b-form-input class='mx-2' v-if="socials == 'youtube'" v-model='youtube' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
+      <b-form-input class='mx-2' v-if="socials == 'discord'" v-model='discord' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
+      <b-form-input class='mx-2' v-if="socials == 'patreon'" v-model='patreon' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
+      <b-form-input class='mx-2' v-if="socials == 'twitter'" v-model='twitter' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
+      </b-col>
+      <b-col style='text-align:left;padding:.4rem;' lg="1">
+         <i style="font-size:24px;" :value='socials' class="fas fa-trash-alt red delete" v-on:click="deleteRow(socials, 'social')"></i>
+      </b-col>
+         </b-row>
+  </b-container>
+  </div>
+            
 
-    <b-row>
+    <b-row class='py-2'>
   
-    <b-col lg="2" style="text-align:left;"><label for="yourroles">Your Roles:</label></b-col>
+    <b-col lg="2"  style="text-align:left;"><label for="yourroles">Your Roles:</label></b-col>
     <b-col style="text-align:left;">
       <b-form-checkbox-group
         id="yourroles"
@@ -84,25 +101,7 @@
       [placeholder]
     </b-col>
   </b-row>
-  <b-row>
-    <b-col lg="2" style="text-align:left;"><label for="yoursocials">Your Socials:</label></b-col>
-    <b-col>
-      <i v-on:click='socialsAdd(social)' v-for="social in socialsOptions" :class="'fab fa-' + social" :id='social'></i>
-    </b-col>
-  </b-row>
-  <b-row class="p-1" :key='socials' v-for="socials in socialsList">
-    <b-col lg="1"><i :class="'fab fa-' + socials + ' no-hover'"></i></b-col>
-    <b-col>
-      <!--Not ideal, not sure a way around it though zzz-->
-      <b-form-input v-if="socials == 'twitch'" v-model='twitch' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
-      <b-form-input v-if="socials == 'youtube'" v-model='youtube' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
-      <b-form-input v-if="socials == 'discord'" v-model='discord' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
-      <b-form-input v-if="socials == 'patreon'" v-model='patreon' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
-      <b-form-input v-if="socials == 'twitter'" v-model='twitter' :placeholder="'Your ' + socials.replace(/^\w/, c => c.toUpperCase())"></b-form-input>
-      </b-col>
-    <b-col lg="1"><i style="font-size:24px;" :value='socials' class="fas fa-trash-alt red delete" v-on:click="deleteRow(socials, 'social')"></i></b-col>
-  </b-row>
- 
+
   <!--Mentor-->
   <span v-if='true'>
   <b-row>
@@ -119,7 +118,7 @@
       </b-col>
   </b-row>
   <b-row class="py-2">
-    <b-col lg="2" style="text-align:left;"><label for="aboutme">Your Achievements <i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Seperate achievements by comma"></i>:</label></b-col>
+    <b-col lg="2" style="text-align:left;"><label for="aboutme">Your Achievements <i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Seperate achievements by comma"></i></label></b-col>
     <b-col><b-form-textarea
         id="aboutme"
         v-model='achievements'
@@ -220,7 +219,8 @@ export default {
           { value: 'jungle', text: 'Jungle' },
           { value: 'middle', text: 'Middle' },
           { value: 'adc', text: 'ADC'},
-		      { value: 'support', text: 'Support'}	
+          { value: 'support', text: 'Support'},
+          { value: 'teams', text: 'Teams/Competitive'}
         ],
         selectedMoney: [],
         selectedReview: [],
@@ -240,7 +240,7 @@ export default {
           region: null,
           account: null,
           accountList: [],
-          mainAccount: null,
+          mainAccount: {},
           socials: '',
           socialName: '',
           socialsList: [],
@@ -302,10 +302,9 @@ export default {
     updateAccounts: function() {
       var vm = this;
       var dupe = false;
-      var l = vm.accountList.length-1;
+      var l = vm.accountList.length;
       if(this.accountList.length <= 1){
           this.mainAccount = 0;
-          l = l+1;
         }
       if(this.account && this.region) {
         for(let x of this.accountList){
@@ -337,6 +336,9 @@ export default {
   setMain: function(newMain){
     this.main = newMain;
   },
+  setMainAccount: function(newMain){
+    this.mainAccount = newMain;
+  },
    setData: function() {
     var vm = this;
     this.accountList.forEach(function(x) {
@@ -355,7 +357,7 @@ export default {
       'region': [...new Set(this.regionList)],
       'accounts': this.accountList,
       'main': this.main,
-      //'mainAccount': this.mainAccount
+      'mainAccount': this.mainAccount
     };
     let data2 = {};
     //mentor student
@@ -380,6 +382,7 @@ export default {
       this.makeToast('Updated', 'You have saved your profile.', 'success')
     })
     .catch(error => {
+      this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
       console.log(error)
     })
   },
@@ -392,6 +395,7 @@ export default {
       this.main = response.data.main;
       this.accountList = response.data.accounts;
       this.selectedRoles = response.data.roles;
+      this.mainAccount = response.data.mainAccount;
       this.socialsList = Object.keys(response.data.socials)
       for(const[k,v] of Object.entries(response.data.socials)) {
         this[k]=v; 
@@ -403,6 +407,7 @@ export default {
       console.log(response);
     })
     .catch(error => {
+      this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
       console.log(error)
     })
   }
@@ -441,10 +446,18 @@ background-color:#32383E;
 
 .deleteChamp {
 position:absolute;
-top:1.25rem;
-right:1rem;
+top:.2rem;
+right:.2rem;
 opacity:.75;
 }
+
+.badgeChamp {
+position:absolute;
+bottom:.2rem;
+left:.2rem;
+opacity:1;
+}
+
 .delete:hover, .deleteChamp:hover{
 color:red;
 }
@@ -453,18 +466,22 @@ h5 {
 }
 .fab {
   font-size: 24px;
-  float:left;
 }
 .no-hover{
   cursor:default;
   font-size:36px;
 }
-.no-hover:hover{
-  color:#BEBEBE;
-  cursor:default;
-}
 
 label {
   font-size:17px!important;
 }
+
+.accounts {
+  background-color:#636d7b;
+}
+.accounts:hover{
+    background-color:#3f464e;
+}
+.img-holder {position: relative; display: inline-block;}
+.img-holder img {display: block;}
 </style>
