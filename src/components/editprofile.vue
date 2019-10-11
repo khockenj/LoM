@@ -158,8 +158,8 @@ Beat Doublelift in arm wrestling"
   </b-row>
 
   <b-row>
-  <b-col lg="2" style="text-align:left;"><label for="yourreq">Requirements:</label></b-col>
-    <b-col style="text-align:left;">
+  <b-col lg="2" style="text-align:left;"><label for="yourreq">Add Requirement:</label></b-col>
+    <b-col lg="3" style="text-align:left;">
       <b-form-select id='yourreq' v-model="selectedReq" v-on:change='addReq' :options="reqOptions">
         <template v-slot:first>
           <option disabled :value="null">Requirement</option>
@@ -167,9 +167,34 @@ Beat Doublelift in arm wrestling"
         </b-form-select>
     </b-col>
   </b-row>
-  <b-row v-for='r in requirements'>
-    <b-col></b-col>
+  <b-row style='width:55%;align-items: center;' class='py-1'><b-col lg='12' class='border border-dark rounded'>
+      <h5>Your Requirements</h5>
+    </b-col></b-row>
+  <span :key='key' v-for='(value, key) in requirements'>
+  <b-row v-if="value != null && (value == true || value.enabled == true)" style="width:55%;text-align:left;"  class="py-1 accounts border border-dark rounded">
+    <b-col v-if="key=='roleMatch' && value==true">Role Match<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="If any roles match - pass."></i> <i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i></b-col>
+    <b-col v-if="key=='serverMatch' && value==true">Server Match<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="If any servers match - pass."></i><i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i></b-col>
+    <b-col v-if="key=='champMatch' && value==true">Champ Match<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="If any champs match - pass."></i><i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i></b-col>
+    <b-col v-if="key=='langMatch' && value==true">Language Match<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="If any languages match - pass."></i><i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i></b-col>
+    <b-col v-if="key=='gamesPlayed' && value != null && value.enabled==true" lg="12">
+      <b-form inline>
+      <label for='totalGames'>Student has played</label>
+      <b-form-input class='mx-2' style='width:12.5%;' v-model='totalGames' placeholder='10'></b-form-input>
+       <label for='days'>+ games in the last</label>
+      <b-form-select class='mx-2' id='days' v-model="days"  :options="daysOptions"></b-form-select>
+      <i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i>
+        </b-form>
+        </b-col>
+    <b-col lg="12" v-if="key=='rank' && value != null && value.enabled==true">
+      <b-form inline>
+        <label for='minmax'>Student is</label>
+      <b-form-select class='mx-2' id='minmax' v-model="minmax"  :options="minmaxOptions"></b-form-select>
+        <b-form-select class='mx-2' id='rank' v-model="rank" :options="rankOptions"></b-form-select>
+        <i style="font-size:24px;" :value='key' class="fas fa-trash-alt red delete" v-on:click="deleteReq(key)"></i>
+    </b-form>
+    </b-col>
     </b-row>
+    </span>
   </span>
 
   <b-row v-if="false">
@@ -243,10 +268,35 @@ export default {
           { value: 'support', text: 'Support'},
           { value: 'teams', text: 'Teams/Competitive'}
         ],
+        minmaxOptions: [
+          { value: 'min', text: 'at least' },
+          { value: 'max', text: 'at most' }
+        ],
+        daysOptions: [
+          { value: 31, text: 'Month' },
+          { value: 7, text: 'Week' },
+          { value: 0, text: 'Season' }
+        ],
+        	rankOptions: [
+          { value: 'iron', text: 'Iron' },
+          { value: 'bronze', text: 'Bronze' },
+		      { value: 'silver', text: 'Silver'},
+          { value: 'gold', text: 'Gold' },
+          { value: 'platinum', text: 'Platinum' },
+          { value: 'diamond', text: 'Diamond' },
+		      { value: 'master', text: 'Master'},
+          { value: 'grandmaster', text: 'Grandmaster' },
+          { value: 'challenger', text: 'Challenger'},
+		      { value: 'professional', text: 'Professional', disabled: true }
+        ],
         selectedMoney: [],
         selectedReview: [],
         selectedLang: null,
         selectedReq: null,
+        minmax: 'min',
+        days: 7,
+        rank: 'gold',
+        totalGames: 10,
         aboutMe: '',
         achievements:'',
         socialsOptions: ['twitch', 'youtube', 'discord', 'twitter', 'patreon'],
@@ -323,6 +373,13 @@ export default {
           this.socialsList.splice(index, 1);
         }
     },
+    deleteReq: function(r) {
+      if(r == 'roleMatch' || r == 'champMatch' || r == 'serverMatch' || r == 'langMatch') {
+        this.requirements[r] = false;
+      }  else if(r == 'gamesPlayed' || r == 'rank') {
+        this.requirements[r].enabled = false;
+      } 
+    },
     makeToast(title, content, variant = null) {
         this.$bvToast.toast(content, {
           title: `${title}`,
@@ -384,14 +441,17 @@ export default {
     this.languages.splice(index, 1);
   },
   addReq: function() {
+    if(this.requirements[this.selectedReq] == true || this.requirements[this.selectedReq].enabled == true) {
+      this.makeToast('Warning', 'You already added this requirement.', 'warning')
+    } else {
     if(this.selectedReq == 'roleMatch' || this.selectedReq == 'champMatch' || this.selectedReq == 'serverMatch' || this.selectedReq == 'langMatch') {
       this.requirements[this.selectedReq] = true;
     } else if(this.selectedReq == 'gamesPlayed') {
-      this.requirements[this.selectedReq] = {'games': 0, 'days': 0}
+      this.requirements[this.selectedReq] = {'enabled': true, 'games': this.totalGames, 'days': this.days}
     } else if(this.selectedReq == 'rank') {
-      this.requirements[this.selectedReq] = {'minmax': 'min', 'rank': ''}
+      this.requirements[this.selectedReq] = {'enabled': true, 'minmax': this.minmax, 'rank': this.rank}
     }
-    console.log(this.requirements);
+    }
   },
    setData: function() {
     var vm = this;
@@ -412,18 +472,23 @@ export default {
       'accounts': this.accountList,
       'main': this.main,
       'mainAccount': this.mainAccount,
-      'languages': this.languages
+      'languages': this.language,
     };
     let data2 = {};
     //mentor student
     if(true) {
-      //mentor
+      if(this.requirements.gamesPlayed.enabled == true) {
+        this.requirements.gamesPlayed = {'enabled': true, 'games': this.totalGames, 'days': this.days}
+      }
+      if(this.requirements.rank.enabled == true) {
+        this.requirements.rank = {'enabled': true, 'minmax': this.minmax, 'rank': this.rank}
+      }
       data2 = {
         'bio': this.aboutMe,
         'achievements': (this.achievements).split(","),
         'reviewType': this.selectedReview,
-        'moneyType': this.selectedMoney
-        //'requirements': this.requirements
+        'moneyType': this.selectedMoney,
+        'requirements': this.requirements
       }
     } else {
       data2 = {
@@ -459,7 +524,12 @@ export default {
       this.aboutMe = response.data.bio;
       this.selectedMoney = response.data.moneyType;
       this.selectedReview = response.data.reviewType;
-      this.achievements = response.data.achievements.join(',')
+      this.achievements = response.data.achievements.join(',');
+      this.requirements = response.data.requirements;
+      this.totalGames = response.data.requirements.gamesPlayed.games;
+      this.rank = response.data.requirements.rank.rank;
+      this.minmax = response.data.requirements.rank.minmax;
+      this.days = response.data.requirements.gamesPlayed.days;
       console.log(response);
     })
     .catch(error => {

@@ -10,8 +10,10 @@
       <b-navbar-nav>
 		  <b-nav-item><router-link class="nav-link" to="/">Home</router-link></b-nav-item>
       <b-nav-item><router-link class="nav-link" to="/search">Search</router-link></b-nav-item>
-      <b-nav-item><router-link class="nav-link" to="/login">Login</router-link></b-nav-item>
-      <b-nav-item><router-link class="nav-link" to="/profile/K3Vx">Faker</router-link></b-nav-item>
+      <b-nav-item v-if='!loggedIn'><router-link class="nav-link" to="/login">Sign In</router-link></b-nav-item>
+      <b-nav-item v-if='loggedIn'><a class="nav-link" href="/logout">Sign out</a></b-nav-item>
+      <b-nav-item v-if='loggedIn'><router-link class="nav-link" to="/editProfile">Edit Profile</router-link></b-nav-item>
+      <b-nav-item v-if='loggedIn'><router-link class="nav-link" :to="'/profile/' + profileData.name">Your Profile</router-link></b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -35,7 +37,35 @@ display:inline;
 }
 </style>
 <script>
+import axios from 'axios'
 export default {
-  name: 'Navbar'
+  
+  name: 'Navbar',
+  props: ['loggedIn', 'profileData'],
+  methods: {
+    checkUser: function() {
+      //console.log(document.cookie);
+    //const path = 'http://localhost:5000/api/checkUser
+    const path = '/api/checkUser'
+    axios.get(path)
+    .then(response => {
+      if(response.data == false) {
+          this.loggedIn = false;
+          console.log(this.loggedIn)
+      } else {
+        this.profileData = response.data;
+        console.log(this.profileData);
+        this.loggedIn = true;
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      this.loggedIn = false;
+    })
+  }
+},
+mounted: function() {
+  this.checkUser();
+}
 }
 </script>

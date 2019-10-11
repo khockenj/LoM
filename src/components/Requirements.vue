@@ -6,14 +6,18 @@
         header-text-variant="white"
         align="center"
       >
-
+     
       <b-list-group flush>
-      <b-list-group-item>Season Games: <span class="red">105/700</span></b-list-group-item>
-      <b-list-group-item>Weekly Games: <span class="green">100/5</span></b-list-group-item>
-      <b-list-group-item>Language: <span class="green">English</span></b-list-group-item>
-      <b-list-group-item>Rank: <span class="yellow">Diamond 4/Diamond 2</span></b-list-group-item>
-      <b-list-group-item>Role: <span class="red">Middle/ADC</span></b-list-group-item>
-      <b-list-group-item>Champs: <span class="red">No Champions in common</span></b-list-group-item>
+      <span :key='key' v-for='(value, key) in requirements'>
+        <span v-if="value != null && (value == true || value.enabled == true)">
+      <b-list-group-item v-if="key=='gamesPlayed'">Games during the last: {{value.days}}</b-list-group-item>
+      <b-list-group-item v-if="key=='langMatch'">Language: {{value}}</b-list-group-item>
+      <b-list-group-item v-if="key=='rank'">{{value.minmax}} - {{value.rank.replace(/^\w/, c => c.toUpperCase())}}</b-list-group-item>
+      <b-list-group-item v-if="key=='roleMatch'">{{value}}</b-list-group-item>
+      <b-list-group-item v-if="key=='champMatch'">Champs: {{value}}</b-list-group-item>
+      <b-list-group-item v-if="key=='champMatch'">Server: {{value}}</b-list-group-item>
+      </span>
+      </span>
     </b-list-group>
 
     <template v-slot:footer>
@@ -27,5 +31,6 @@
   <script>
 export default {
   name: 'Requirements',
+  props: ['requirements']
 }
 </script>

@@ -7,31 +7,33 @@ import base64
 import requests
 import random, string
 import dns
+import hashlib
 CLIENT_SECRET ="hx984-Qq67PLmssoCtcUBhLEHrXP74gG"
 CLIENT_ID = "628252746365140999"
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-CORS(app)
+#CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-#prodOrLocal = "http://localhost:" + port + "/"
-prodOrLocal = "https://lom-website-253818.appspot.com/"
+prodOrLocal = "http://localhost:" + port + "/"
+#prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
 def index():
+    #search by did, find user, make sure hashed id = cookie id
     generateCode()
     if request.cookies.get('user') and request.cookies.get('duser'):
         loggedIn = True
     elif request.cookies.get('rememberMe') and request.cookies.get('duser'):
         response = make_response(render_template('index.html'))
         user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
-        h = hash(user._id)
+        h = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
         response.set_cookie('duser', user.did, max_age=60*60*24*31)
-        response.set_cookie('user', h, max_age=60*60*24*1)
+        response.set_cookie('user', h, max_age=60*60*24*31)
         response.set_cookie('rememberMe', h, max_age=60*60*24*31)
         loggedIn = True
         return response
@@ -44,22 +46,22 @@ def login():
     r = request.args.get('r')
     mcode = request.args.get('mcode')
     if not request.cookies.get('user') and not request.cookies.get('rememberMe') and r != "1":
-        return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-        #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0&response_type=code&scope=identify%20email%20guilds.join")
+        #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+        return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join")
     elif not request.cookies.get('user') and not request.cookies.get('rememberMe') and r == "1":
         if mcode:
             mongo.db.codes.update({'code': mcode},{'$set':{"used" : True, "usedBy": ''}})
-            return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
-            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
+            #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
         else:
-            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
     else:
         user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
         response = make_response(redirect('/#/profile/' + user['name']))
-        h = str(hash(user['_id']))
+        h = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
         response.set_cookie('duser', user['did'], max_age=60*60*24*31)
-        response.set_cookie('user', h, max_age=60*60*24*1)
+        response.set_cookie('user', h, max_age=60*60*24*31)
         response.set_cookie('rememberMe', h, max_age=60*60*24*31)
         return response
 
@@ -134,11 +136,11 @@ def callback():
             else:
                 #already registered error
                 response = make_response(redirect('/#/login'))  
-        h = str(hash(user['_id']))
+        h = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
         oneMonth = 60*60*24*31
         oneDay = 60*60*24*1
         response.set_cookie('duser', user['did'], max_age=oneMonth)
-        response.set_cookie('user', h, max_age=oneDay)
+        response.set_cookie('user', h, max_age=oneMonth)
         response.set_cookie('rememberMe', h, max_age=oneMonth)
         return response
     except:
@@ -170,6 +172,19 @@ def checkCode(code):
     prep = mongo.db.codes.find_one({"code": code})
     response = json.dumps(prep, default=json_util.default)
     return response
+
+@app.route('/api/checkUser')
+def checkUser():
+    #we want to send back user info so we don't have to make another req
+    id = request.cookies.get('user')
+    did = request.cookies.get('duser')
+    user = mongo.db.users.find_one({"did": did})
+    print(user['_id'])
+    compare = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
+    if compare == id:
+        return json.dumps(user, default=json_util.default)
+    else:
+        return json.dumps(False)
 
 def generateCode():
     x = ''.join(random.choices(string.ascii_letters + string.digits, k=16))

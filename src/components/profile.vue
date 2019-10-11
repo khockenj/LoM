@@ -2,7 +2,7 @@
 <div class="profile">
 <div class="overlay"></div>
 <div>
-  <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
+<b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
      <div style="display:flex;">
     <div style="flex-grow:12;"><i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(profileData.score-Math.floor(profileData.score))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(profileData.score)+customRound(profileData.score-Math.floor(profileData.score))[1]"></i></div>
     <div class="iconHolder" style="flex-grow:0;">
@@ -16,7 +16,7 @@
     <i class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i>
     <i class="fas fa-info-circle" style="position:absolute; left:.6rem; top:4rem;" v-b-modal.info></i>
     <template v-slot:header>{{profileData.name}}<img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" /></template>
-  </b-jumbotron>
+  </b-jumbotron>  
 </div>
 <b-container style="max-width:1200px">
     <b-row>
@@ -30,7 +30,7 @@
         </b-col>
         <b-col lg="3">
             <stats v-if="profileData.type == 'student'" style="height:100%;"/>
-            <requirements v-if="profileData.type == 'mentor'" style="height:100%;" />
+            <requirements :requirements="profileData.requirements" v-if="profileData.type == 'mentor'" style="height:100%;" />
         </b-col>
     </b-row>
     <b-row>
@@ -129,8 +129,8 @@ export default {
       }
     },
     getData: function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    //const path = '/api/profileInfo/' + this.$route.params.user
+    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
