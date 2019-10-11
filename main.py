@@ -179,13 +179,14 @@ def checkUser():
     id = request.cookies.get('user')
     did = request.cookies.get('duser')
     user = mongo.db.users.find_one({"did": did})
-    print(user['_id'])
-    compare = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
-    if compare == id:
-        return json.dumps(user, default=json_util.default)
-    else:
+    try:
+        compare = hashlib.sha3_512((str(user['_id']).encode())).hexdigest()
+        if compare == id:
+            return json.dumps(user, default=json_util.default)
+        else:
+            return json.dumps(False)
+    except:
         return json.dumps(False)
-
 def generateCode():
     x = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
     codeType = "mentor"

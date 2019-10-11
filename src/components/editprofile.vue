@@ -108,7 +108,7 @@
   </b-row>
 
   <!--Mentor-->
-  <span v-if='true'>
+  <span v-if="mentor=='mentor'">
   <b-row>
     <b-col lg="12" style="text-align:left;"><h2>Mentor Stuff</h2></b-col>
     </b-row>
@@ -197,7 +197,7 @@ Beat Doublelift in arm wrestling"
     </span>
   </span>
 
-  <b-row v-if="false">
+  <b-row v-if="mentor=='student'">
     <b-col lg="2" style="text-align:left;"><label for="yourgoals">Your Goals:</label></b-col>
     <b-col style='text-align:left'>[placeholder]</b-col>
   </b-row>
@@ -518,6 +518,7 @@ export default {
       this.mainAccount = response.data.mainAccount;
       this.languages = response.data.languages;
       this.socialsList = Object.keys(response.data.socials)
+      this.mentor = response.data.type;
       for(const[k,v] of Object.entries(response.data.socials)) {
         this[k]=v; 
       }

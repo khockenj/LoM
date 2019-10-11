@@ -94,6 +94,8 @@ import AboutMe from './AboutMe'
 import Achievements from './Achievements'
 import Requirements from './Requirements'
 import axios from 'axios'
+//http://ddragon.leagueoflegends.com/cdn/img/champion/splash/[champ]_[skinID].jpg
+//http://ddragon.leagueoflegends.com/cdn/9.20.1/data/en_US/champion/[champ].json -> get list of skins for each champ, add into a file as dict champ:{text: skinName, value: num}, use num to search riot api for splash, save splash, set as bg, now we have that splash saved
 export default {
   name: 'ProfilePage',
     components: {
@@ -157,7 +159,7 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0,0,0, 0.4) !important;
-  background-image:url('/static/backgrounds/brand.jpg');
+  background-image:url('/static/backgrounds/aatrox.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;

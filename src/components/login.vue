@@ -40,7 +40,7 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0,0,0, 0.4) !important;
-  background-image:url('/static/backgrounds/yasuo.jpg');
+  background-image:url('/static/backgrounds/yasuo_test.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
