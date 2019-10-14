@@ -9,7 +9,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
       <b-nav-item><router-link class="nav-link" to="/search">Search Mentors</router-link></b-nav-item>
-      <b-nav-item v-if='!loggedIn'><router-link class="nav-link" >Sign In</router-link></b-nav-item>
+      <b-nav-item v-if='!loggedIn'><router-link to='/login' class="nav-link" >Sign In</router-link></b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -49,8 +49,8 @@ export default {
   methods: {
     checkUser: function() {
       //console.log(document.cookie);
-    //const path = 'http://localhost:5000/api/checkUser
-    const path = '/api/checkUser'
+    const path = 'http://localhost:5000/api/checkUser'
+    //const path = '/api/checkUser'
     axios.get(path)
     .then(response => {
       if(response.data == false) {

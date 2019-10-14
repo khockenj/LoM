@@ -13,7 +13,7 @@ CLIENT_ID = "628252746365140999"
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-#CORS(app)
+CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"

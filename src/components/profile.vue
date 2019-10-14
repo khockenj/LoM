@@ -40,9 +40,11 @@
   </b-jumbotron>
         </b-col>
  </b-row>
+         
+        
     <b-row style="padding-top:0;">
         <b-col v-for="m in profileData.champs" v-bind:key="m" :champ="m">
-            <profile-champion :champ="m"/>
+            <profile-champion :champ="m" :main="profileData.main"/>
         </b-col>
     </b-row>
 </b-container>
@@ -131,8 +133,8 @@ export default {
       }
     },
     getData: function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    const path = '/api/profileInfo/' + this.$route.params.user
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    //const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
