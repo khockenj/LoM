@@ -507,8 +507,8 @@ export default {
     })
   },
   getData:function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
-    //const path = '/api/profileInfo/' + 'K3Vx'
+    //const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
+    const path = '/api/profileInfo/' + 'K3Vx'
     axios.get(path)
     .then(response => {
       this.removedChamps = response.data.champs;

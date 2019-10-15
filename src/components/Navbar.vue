@@ -49,8 +49,8 @@ export default {
   methods: {
     checkUser: function() {
       //console.log(document.cookie);
-    const path = 'http://localhost:5000/api/checkUser'
-    //const path = '/api/checkUser'
+    //const path = 'http://localhost:5000/api/checkUser'
+    const path = '/api/checkUser'
     axios.get(path)
     .then(response => {
       if(response.data == false) {
