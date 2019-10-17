@@ -31,9 +31,31 @@ var base = new Vue({
     assetsSubDirectory: 'static'
   },
 	data: {
-		champions: Champions['data']
+      champions: Champions['data'],
+      loggedIn: false
   },
-  methods: {}
+  methods: {
+   checkUser: function() {
+   //console.log(document.cookie);
+    const path = 'http://localhost:5000/api/checkUser'
+    //const path = '/api/checkUser'
+    axios.get(path)
+    .then(response => {
+      if(response.data == false) {
+          this.loggedIn = false;
+          console.log(this.loggedIn)
+      } else {
+        this.profileData = response.data;
+        console.log(this.profileData);
+        this.loggedIn = true;
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      this.loggedIn = false;
+    })
+  }
+  }
 });
 
 var Nav = new Vue({

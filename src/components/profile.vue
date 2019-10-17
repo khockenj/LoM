@@ -1,6 +1,6 @@
 <template>
 <div class="profile">
-<div class="overlay"></div>
+<div class="overlay" :style="setBG"></div>
 <div>
 <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
      <div style="display:flex;">
@@ -96,8 +96,10 @@ import AboutMe from './AboutMe'
 import Achievements from './Achievements'
 import Requirements from './Requirements'
 import axios from 'axios'
-//http://ddragon.leagueoflegends.com/cdn/img/champion/splash/[champ]_[skinID].jpg
-//http://ddragon.leagueoflegends.com/cdn/9.20.1/data/en_US/champion/[champ].json -> get list of skins for each champ, add into a file as dict champ:{text: skinName, value: num}, use num to search riot api for splash, save splash, set as bg, now we have that splash saved
+//http://ddragon.leagueoflegends.com/cdn/9.20.1/data/en_US/champion/[champ].json 
+//-> get list of skins for each champ, add into a file as dict champ:{text: skinName, value: num}, save list so we can figure out which num belongs to which name
+//champ.data.skins[.name .num]
+//eg. {"Ekko": [{"name": "Trick or Treat Ekko", "value": 12}]}
 export default {
   name: 'ProfilePage',
     components: {
@@ -133,8 +135,8 @@ export default {
       }
     },
     getData: function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    const path = '/api/profileInfo/' + this.$route.params.user
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    //const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
@@ -144,13 +146,22 @@ export default {
       console.log(error)
     })
 
-  }
+  },
+    
   },
   mounted: function(){
     this.getData();
+    
   },
   updated: function() {
     //this.getData();
+  },
+  computed: {
+    setBG: function() {
+      return {
+        '--bg': "url('/static/backgrounds/splash/" + this.profileData.bg + ".jpg')"
+      }
+    }
   }
 }
 
@@ -161,7 +172,7 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0,0,0, 0.4) !important;
-  background-image:url('/static/backgrounds/aatrox.jpg');
+  background-image:var(--bg);
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;

@@ -13,13 +13,13 @@ CLIENT_ID = "628252746365140999"
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-#CORS(app)
+CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-#prodOrLocal = "http://localhost:" + port + "/"
-prodOrLocal = "https://lom-website-253818.appspot.com/"
+prodOrLocal = "http://localhost:" + port + "/"
+#prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
