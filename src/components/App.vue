@@ -1,12 +1,15 @@
 <template>
   <div id="app">
-    <router-view/>
+    <router-view v-if='this.$parent.complete' />
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  props: ['loggedIn', 'profileData'],
+  mounted: function() {
+  }
 }
 </script>
 

@@ -210,8 +210,10 @@ Beat Doublelift in arm wrestling"
 </template>
 <script>
 import axios from 'axios'
+import router from '../router'
 export default {
   name: 'EditPage',
+  props: ['loggedIn'],
   data() {
       return {
          reviewOptions: [
@@ -330,13 +332,19 @@ export default {
           finalSocial: {},
           selectedRoles: [],
           regionList: [],
-          userData: {}
+          userData: {},
+          loggedIn: this.$parent.loggedIn
       }
     },
   components: {
     
   },
   methods: {
+  redirect: function() {
+    if(!loggedIn) {
+      router.push({ name: "login"})
+    }
+  },
 	championsList: function() {	
 	var vm = this;
 	var championList = [];
@@ -507,8 +515,8 @@ export default {
     })
   },
   getData:function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
-    const path = '/api/profileInfo/' + 'K3Vx'
+    const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
+    //const path = '/api/profileInfo/' + 'K3Vx'
     axios.get(path)
     .then(response => {
       this.removedChamps = response.data.champs;
@@ -540,6 +548,7 @@ export default {
   }
   },
   mounted: function(){
+    this.redirect();
     if(this.$route.query.new != '1') {
       this.getData();
     }

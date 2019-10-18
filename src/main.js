@@ -3,7 +3,7 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
-
+import axios from 'axios'
 import './default.css'
 import MentorSearch from './components/MentorSearch'
 import Navbar from './components/Navbar'
@@ -32,7 +32,9 @@ var base = new Vue({
   },
 	data: {
       champions: Champions['data'],
-      loggedIn: false
+      loggedIn: false,
+      profileData: {},
+      complete: false,
   },
   methods: {
    checkUser: function() {
@@ -49,12 +51,17 @@ var base = new Vue({
         console.log(this.profileData);
         this.loggedIn = true;
       }
+      this.complete = true;
     })
     .catch(error => {
       console.log(error)
       this.loggedIn = false;
+      this.complete = true;
     })
   }
+  },
+  mounted: function() {
+    this.checkUser();
   }
 });
 
@@ -64,5 +71,37 @@ var Nav = new Vue({
    el: "#navbar",
    components: {
 	   Navbar
+   },
+   methods: {
+    checkUser: function() {
+    //console.log(document.cookie);
+     const path = 'http://localhost:5000/api/checkUser'
+     //const path = '/api/checkUser'
+     axios.get(path)
+     .then(response => {
+       this.complete = true;
+       if(response.data == false) {
+           this.loggedIn = false;
+           console.log(this.loggedIn)
+       } else {
+         this.profileData = response.data;
+         console.log(this.profileData);
+         this.loggedIn = true;
+       }
+     })
+     .catch(error => {
+       console.log(error)
+       this.complete = true;
+       this.loggedIn = false;
+     })
+   }
+   },
+   data: {
+     loggedIn: false,
+     profileData: {},
+     complete: false
+   },
+   mounted: function() {
+     this.checkUser();
    }
 });
