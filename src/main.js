@@ -33,36 +33,35 @@ var base = new Vue({
 	data: {
       champions: Champions['data'],
       loggedIn: false,
-      profileData: {},
+      profileData: null,
       complete: false,
   },
   methods: {
-   checkUser: function() {
-   //console.log(document.cookie);
-    const path = 'http://localhost:5000/api/checkUser'
-    //const path = '/api/checkUser'
-    axios.get(path)
-    .then(response => {
-      if(response.data == false) {
-          this.loggedIn = false;
-          console.log(this.loggedIn)
-      } else {
-        this.profileData = response.data;
-        console.log(this.profileData);
-        this.loggedIn = true;
-      }
-      this.complete = true;
-    })
-    .catch(error => {
-      console.log(error)
-      this.loggedIn = false;
-      this.complete = true;
-    })
-  }
-  },
-  mounted: function() {
-    this.checkUser();
-  }
+    checkUser: async function() {
+    //console.log(document.cookie);
+     const path = 'http://localhost:5000/api/checkUser'
+     //const path = '/api/checkUser'
+     axios.get(path)
+     .then(response => {
+       this.complete = true;
+       if(response.data == false) {
+           this.loggedIn = false;
+           console.log(loggedIn)
+       } else {
+         this.loggedIn = true;
+         this.profileData = response.data;
+       }
+     })
+     .catch(error => {
+       console.log(error)
+       this.complete = true;
+       this.loggedIn = false;
+     })
+   }
+   },
+   mounted: async function() {
+     await this.checkUser();
+   }
 });
 
 var Nav = new Vue({
@@ -73,7 +72,7 @@ var Nav = new Vue({
 	   Navbar
    },
    methods: {
-    checkUser: function() {
+    checkUser: async function() {
     //console.log(document.cookie);
      const path = 'http://localhost:5000/api/checkUser'
      //const path = '/api/checkUser'
@@ -82,11 +81,10 @@ var Nav = new Vue({
        this.complete = true;
        if(response.data == false) {
            this.loggedIn = false;
-           console.log(this.loggedIn)
+           console.log(loggedIn)
        } else {
-         this.profileData = response.data;
-         console.log(this.profileData);
          this.loggedIn = true;
+         this.profileData = response.data;
        }
      })
      .catch(error => {
@@ -98,10 +96,10 @@ var Nav = new Vue({
    },
    data: {
      loggedIn: false,
-     profileData: {},
+     profileData: null,
      complete: false
    },
-   mounted: function() {
-     this.checkUser();
+   mounted: async function() {
+     await this.checkUser();
    }
 });

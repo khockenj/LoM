@@ -113,6 +113,7 @@ export default {
   },
   data: function() {
   return {
+    skinList: null,
     graphdata:[{
       x: [1,2,3,4],
       y: [10,15,13,17],
@@ -125,6 +126,18 @@ export default {
   }
 },
   methods: {
+     getSkinList: function() {
+    const path = 'http://localhost:5000/static/skinList.json'
+    //const path = '/static/skinList.json'
+    axios.get(path)
+    .then(response => {
+      this.skinList = response.data;
+    })
+    .catch(error => {
+      this.makeToast('Error', "Cannot find skin list. Try again or report it - thank you!", 'danger');
+      console.log(error)
+    })
+  },
     customRound: function(n){
       if(n>=.4) {
         return [1,0];

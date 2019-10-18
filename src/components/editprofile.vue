@@ -1,8 +1,8 @@
 <template>
 <div class="editProfile" style="max-width:1200px">
      <!--{{this.$route.query.new}}-->
-<div class="overlay"></div>
-<b-container style="max-width:1000px">
+<div class="overlay" v-if="p"></div>
+<b-container v-if="p" style="max-width:1000px">
   <b-row>
     <b-col lg="12" class="py-1"><h1>Your Profile</h1></b-col>
     </b-row>
@@ -15,7 +15,7 @@
     </b-col>
     <b-col lg="10">
     <b-form-input id='yourchamps' v-on:change='updateList' list='champions' v-model="champs"></b-form-input>
-    <datalist autocomplete='off' class='champions'>
+    <datalist autocomplete='off' class='champions' id='champions'>
     <option :key='c' v-for="c in champions" :value='c'>{{c}}</option>
   </datalist>
         </b-col>
@@ -213,7 +213,7 @@ import axios from 'axios'
 import router from '../router'
 export default {
   name: 'EditPage',
-  props: ['loggedIn'],
+  props: ['p'],
   data() {
       return {
          reviewOptions: [
@@ -333,21 +333,23 @@ export default {
           selectedRoles: [],
           regionList: [],
           userData: {},
-          loggedIn: this.$parent.loggedIn
+          skinList: null,
       }
     },
   components: {
     
   },
   methods: {
-  redirect: function() {
-    if(!loggedIn) {
-      router.push({ name: "login"})
+  redirect: function(p1) {
+    console.log(p1);
+    if(!p1.loggedIn) {
+      router.push({ name: "Login"})
     }
   },
 	championsList: function() {	
 	var vm = this;
-	var championList = [];
+  var championList = [];
+  console.log(this.$parent);
 	for (const [key, value] of Object.entries(this.$parent.$parent.champions)) {
 		championList.push(value.name);
 	}
@@ -469,8 +471,8 @@ export default {
     this.socialsList.forEach(function(x){
       vm.finalSocial[x] = vm[x];
     })
-    const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
-    //const path = '/api/profileInfo/' + 'K3Vx'
+    const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
+    //const path = '/api/profileInfo/' + this.p.name;
     const data = {
       'did': '175387337054879744', //should be cookie
       'champs': this.removedChamps,
@@ -547,12 +549,12 @@ export default {
     })
   }
   },
-  mounted: function(){
-    this.redirect();
+  mounted: async function(){
+    this.p = await this.$parent;
+    //this.redirect(this.p);
     if(this.$route.query.new != '1') {
       this.getData();
     }
-    var relink = document.getElementsByClassName('champions')[0].id = 'champions';
   }
 }
 </script>

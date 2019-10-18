@@ -8,8 +8,11 @@ import requests
 import random, string
 import dns
 import hashlib
+from pathlib import Path
 CLIENT_SECRET ="hx984-Qq67PLmssoCtcUBhLEHrXP74gG"
 CLIENT_ID = "628252746365140999"
+RIOT_API_KEY = "RGAPI-4ac0abf7-9c24-4dc8-bcd5-fb3aa0deca30"
+PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
@@ -25,7 +28,6 @@ mongo.db.users.create_index([('name', 'text')])
 @app.route('/')
 def index():
     #search by did, find user, make sure hashed id = cookie id
-    generateCode()
     if request.cookies.get('user') and request.cookies.get('duser'):
         loggedIn = True
     elif request.cookies.get('rememberMe') and request.cookies.get('duser'):
@@ -199,3 +201,20 @@ def generateCode():
         'generatedBy': genBy
     }
     mongo.db.codes.insert(d)
+    return d
+
+def getSkinList():
+    skinList = {}
+    championList = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion.json').json()
+    for champ in championList['data']:
+        c = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion/' + champ + '.json').json()
+        skinList[champ] = []
+        print(champ)
+        for skin in c['data'][champ]['skins']:
+            skinList[champ].append({"name": skin['name'], "id": skin['num']})
+    p = Path('./static').glob('skinList.json')
+    file = [x for x in p if x.is_file()]
+    with file[0].open("w+") as f:
+        json.dump(skinList, f)
+
+    
