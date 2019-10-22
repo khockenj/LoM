@@ -13,7 +13,7 @@
       <a v-if="profileData.socials.patreon" :href="'https://www.patreon.com/' + profileData.socials.patreon"><i class="fab fa-patreon"></i></a>
       </div>
       </div>
-    <i class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i>
+    <span v-if='$parent.profileData'><i v-if='$parent.profileData.did == profileData.did' class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i></span>
     <i class="fas fa-info-circle" style="position:absolute; left:.6rem; top:4rem;" v-b-modal.info></i>
     <template v-slot:header>{{profileData.name}}<img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" /></template>
   </b-jumbotron>  
@@ -49,11 +49,29 @@
     </b-row>
 </b-container>
 
-<b-modal id="settings">   
+<b-modal @ok="saveBG" id="settings" ok-title="Save">   
    <template v-slot:modal-title>
       Settings
     </template>
-    settings
+    <b-container>
+      <b-row class='py-2'>
+  <b-col lg="3">
+    <label for='champ'>Champion:</label>
+    </b-col><b-col lg="9">
+    <b-form-select id='champ' v-on:change='filterList' v-model="selectedChamp">
+          <option :key='k' v-for='(v,k) in skinList' :value='k'>{{k}}</option>
+        </b-form-select>
+  </b-col></b-row>
+  <b-row>
+    <b-col lg="3">
+      <label for='yourbg'>Splash:</label>
+      </b-col>
+      <b-col lg="9">
+      <b-form-select id='yourbg' v-model="selectedBG">
+          <option :key='s.id' v-for='s in filteredList' :value='s.id'>{{s.name}}</option>
+        </b-form-select>
+        </b-col></b-row>
+    </b-container>
     </b-modal>
 
 <b-modal id="info">   
@@ -96,6 +114,7 @@ import AboutMe from './AboutMe'
 import Achievements from './Achievements'
 import Requirements from './Requirements'
 import axios from 'axios'
+import skinlist from '../../static/skinList.json'
 //http://ddragon.leagueoflegends.com/cdn/9.20.1/data/en_US/champion/[champ].json 
 //-> get list of skins for each champ, add into a file as dict champ:{text: skinName, value: num}, save list so we can figure out which num belongs to which name
 //champ.data.skins[.name .num]
@@ -111,9 +130,13 @@ export default {
     'requirements': Requirements,
     'achievements': Achievements
   },
+  props: ['p'],
   data: function() {
   return {
-    skinList: null,
+    selectedChamp: null,
+    selectedBG: null,
+    filteredList: null,
+    skinList: skinlist,
     graphdata:[{
       x: [1,2,3,4],
       y: [10,15,13,17],
@@ -126,18 +149,34 @@ export default {
   }
 },
   methods: {
-     getSkinList: function() {
-    const path = 'http://localhost:5000/static/skinList.json'
-    //const path = '/static/skinList.json'
-    axios.get(path)
+        makeToast(title, content, variant = null) {
+        this.$bvToast.toast(content, {
+          title: `${title}`,
+          variant: variant,
+          solid: true,
+          toaster: 'b-toaster-top-center'
+        })
+      },
+    saveBG: function() {
+      console.log(this.selectedBG);
+      this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
+      const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
+      //const path = '/api/profileInfo/' + this.p.name;
+      axios.post(path, {'did': this.$parent.profileData.did, 'bg': this.profileData.bg})
     .then(response => {
-      this.skinList = response.data;
+      console.log(response);
+      this.makeToast('Updated', 'Updated background', 'success')
     })
     .catch(error => {
-      this.makeToast('Error', "Cannot find skin list. Try again or report it - thank you!", 'danger');
+      this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
       console.log(error)
     })
-  },
+
+    },
+    filterList: function() {
+      this.filteredList = this.skinList[this.selectedChamp]
+      console.log(this.filteredList)
+    },
     customRound: function(n){
       if(n>=.4) {
         return [1,0];
@@ -162,9 +201,10 @@ export default {
   },
     
   },
-  mounted: function(){
+  mounted: async function(){
+    await this.$parent;
+    console.log(this.$parent);
     this.getData();
-    
   },
   updated: function() {
     //this.getData();

@@ -474,7 +474,7 @@ export default {
     const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
     //const path = '/api/profileInfo/' + this.p.name;
     const data = {
-      'did': '175387337054879744', //should be cookie
+      'did': this.p.did, //should be cookie
       'champs': this.removedChamps,
       'socials': this.finalSocial,
       'roles': this.selectedRoles,
