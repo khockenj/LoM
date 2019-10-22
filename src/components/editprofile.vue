@@ -342,7 +342,7 @@ export default {
   methods: {
   redirect: function(p1) {
     console.log(p1);
-    if(!p1.loggedIn) {
+    if(p1.loggedIn == false) {
       router.push({ name: "Login"})
     }
   },
@@ -471,10 +471,10 @@ export default {
     this.socialsList.forEach(function(x){
       vm.finalSocial[x] = vm[x];
     })
-    const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
-    //const path = '/api/profileInfo/' + this.p.name;
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.name;
+    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
     const data = {
-      'did': this.p.did, //should be cookie
+      'did': this.$parent.$parent.profileData.did, //should be cookie
       'champs': this.removedChamps,
       'socials': this.finalSocial,
       'roles': this.selectedRoles,
@@ -517,8 +517,8 @@ export default {
     })
   },
   getData:function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
-    //const path = '/api/profileInfo/' + 'K3Vx'
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.name;
+    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
     axios.get(path)
     .then(response => {
       this.removedChamps = response.data.champs;
@@ -551,7 +551,8 @@ export default {
   },
   mounted: async function(){
     this.p = await this.$parent;
-    //this.redirect(this.p);
+    await this.$parent;
+    this.redirect(this.$parent.$parent);
     if(this.$route.query.new != '1') {
       this.getData();
     }

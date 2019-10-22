@@ -122,14 +122,15 @@ def callback():
             "name":info['username'],
             "score":0,
             "socials":{},
-            "rank":"",
+            "rank":"default",
             "main":"",
             "region":[],
             "languages":[],
             "reviewType":[],
             "moneyType":[],
             "roles":[],
-            "email":info['email']
+            "email":info['email'],
+            "bg": "Heimerdinger_0"
             }
             if not user:
                 mongo.db.users.insert(u)

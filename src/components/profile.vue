@@ -13,7 +13,7 @@
       <a v-if="profileData.socials.patreon" :href="'https://www.patreon.com/' + profileData.socials.patreon"><i class="fab fa-patreon"></i></a>
       </div>
       </div>
-    <span v-if='$parent.profileData'><i v-if='$parent.profileData.did == profileData.did' class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i></span>
+    <span v-if='$parent.$parent.profileData'><i v-if='$parent.$parent.profileData.did == profileData.did' class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i></span>
     <i class="fas fa-info-circle" style="position:absolute; left:.6rem; top:4rem;" v-b-modal.info></i>
     <template v-slot:header>{{profileData.name}}<img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" /></template>
   </b-jumbotron>  
@@ -162,7 +162,7 @@ export default {
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
       const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
       //const path = '/api/profileInfo/' + this.p.name;
-      axios.post(path, {'did': this.$parent.profileData.did, 'bg': this.profileData.bg})
+      axios.post(path, {'did': this.$parent.$parent.profileData.did, 'bg': this.profileData.bg})
     .then(response => {
       console.log(response);
       this.makeToast('Updated', 'Updated background', 'success')
@@ -207,7 +207,11 @@ export default {
     this.getData();
   },
   updated: function() {
-    //this.getData();
+  },
+  watch: {
+  '$route'(to,from) {
+    this.getData();
+  }
   },
   computed: {
     setBG: function() {

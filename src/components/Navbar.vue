@@ -16,7 +16,7 @@
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
-            <img style='max-width:32px;' :src="'/static/squareicons/' + p.profileData.main.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'"/>
+            <img style='max-width:32px;min-width:32px;' :src="p.profileData.main? '/static/squareicons/' + p.profileData.main.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"/>
             <em>{{p.profileData.name}}</em>
           </template>
           <b-dropdown-item :to="'/profile/' + p.profileData.name"><i class="fas fa-user textIcon"></i>Your Profile</b-dropdown-item>
