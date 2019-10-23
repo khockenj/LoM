@@ -6,6 +6,7 @@ import LoginPage from '../components/login'
 import ProfilePage from '../components/profile'
 import SignupPage from '../components/signup'
 import EditPage from '../components/editprofile'
+import NowLive from '../components/nowlive'
 Vue.use(Router)
 
 export default new Router({
@@ -39,6 +40,11 @@ export default new Router({
       path: '/editProfile',
       name: 'Edit Profile',
       component: EditPage
+    },
+    {
+      path: '/nowLive',
+      name: 'Now Live',
+      component: NowLive
     },
   ]
 })

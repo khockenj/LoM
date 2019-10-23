@@ -12,6 +12,8 @@ from pathlib import Path
 CLIENT_SECRET ="hx984-Qq67PLmssoCtcUBhLEHrXP74gG"
 CLIENT_ID = "628252746365140999"
 RIOT_API_KEY = "RGAPI-4ac0abf7-9c24-4dc8-bcd5-fb3aa0deca30"
+TWITCH_CLIENT_ID = "pkub3dts9nt6m2kktxu7suk3iqk57n"
+TWITCH_CLIENT_SECRET = "0c3bc8ubtedes3jhqha1kid8ztgezd"
 PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -27,6 +29,7 @@ mongo = PyMongo(app)
 mongo.db.users.create_index([('name', 'text')])   
 @app.route('/')
 def index():
+    getTwitchStreams()
     #search by did, find user, make sure hashed id = cookie id
     if request.cookies.get('user') and request.cookies.get('duser'):
         loggedIn = True
@@ -154,7 +157,7 @@ def callback():
 def profileInfo(user):
     if request.method == 'GET':
         if user == "MENTORS":
-            prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'password': 0, 'type': 0 })
+            prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'type': 0 })
             response = json.dumps([mentor for mentor in prep], default=json_util.default)
         else:
             response = json.dumps(mongo.db.users.find_one({ "$text": { "$search": user } },  { 'ip': 0, 'password': 0 }), default=json_util.default)
@@ -218,4 +221,19 @@ def getSkinList():
     with file[0].open("w+") as f:
         json.dump(skinList, f)
 
+def getTwitchStreams():
+    prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'type': 0 })
+    logins = ""
+    for document in prep:
+        print(document['socials'])
+        try:
+            if document['socials']['twitch']:
+                logins = logins + "user_login=" + document['socials']['twitch'] + "&"
+        except:
+            pass
+    print(logins)
+    headers = {'Client-ID': TWITCH_CLIENT_ID}
+    info = requests.get('https://api.twitch.tv/helix/streams?&game_id=21779&first=100&' + "user_login=loltyler1&user_login=aphromoo", headers=headers).json() 
+    print(info)
+    return info
     

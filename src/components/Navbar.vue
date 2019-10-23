@@ -8,6 +8,7 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
+      <b-nav-item><router-link class="nav-link" to="/nowLive"><i class="fas fa-video textIcon" style='color:rgb(156,0,6);'></i>Live Mentors</router-link></b-nav-item>
       <b-nav-item><router-link class="nav-link" to="/search">Search Mentors</router-link></b-nav-item>
       </b-navbar-nav>
 
