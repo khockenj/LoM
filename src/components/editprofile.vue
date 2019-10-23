@@ -486,12 +486,16 @@ export default {
     };
     let data2 = {};
     //mentor student
-    if(true) {
-      if(this.requirements.gamesPlayed.enabled == true) {
+    if(this.$parent.$parent.profileData.type == "mentor") {
+      if(this.requirements.gamesPlayed && this.requirements.gamesPlayed.enabled == true) {
         this.requirements.gamesPlayed = {'enabled': true, 'games': this.totalGames, 'days': this.days}
+      } else {
+        this.requirements.gamesPlayed = {'enabled': false, 'games': this.totalGames, 'days': this.days}
       }
-      if(this.requirements.rank.enabled == true) {
+      if(this.requirements.rank && this.requirements.rank.enabled == true) {
         this.requirements.rank = {'enabled': true, 'minmax': this.minmax, 'rank': this.rank}
+      } else {
+        this.requirements.rank = {'enabled': false, 'minmax': this.minmax, 'rank': this.rank}
       }
       data2 = {
         'bio': this.aboutMe,
