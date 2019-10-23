@@ -104,7 +104,7 @@ def callback():
         if r != "1":
             #regular login
             if user:
-                response = make_response(redirect('/#/profile/' + user['name']))
+                response = make_response(redirect('/#/profile/' + user['did']))
             else:
                 response = make_response(redirect('/#/signup'))
                 #error about needing to register first
