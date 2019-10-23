@@ -18,18 +18,17 @@ PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-CORS(app)
+#CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-prodOrLocal = "http://localhost:" + port + "/"
-#prodOrLocal = "https://lom-website-253818.appspot.com/"
+#prodOrLocal = "http://localhost:" + port + "/"
+prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
-mongo.db.users.create_index([('name', 'text')])   
+mongo.db.users.create_index([('did', 'text')])  
 @app.route('/')
 def index():
-    getTwitchStreams()
     #search by did, find user, make sure hashed id = cookie id
     if request.cookies.get('user') and request.cookies.get('duser'):
         loggedIn = True
@@ -51,16 +50,16 @@ def login():
     r = request.args.get('r')
     mcode = request.args.get('mcode')
     if not request.cookies.get('user') and not request.cookies.get('rememberMe') and r != "1":
-        #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-        return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join")
+        return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+        #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join")
     elif not request.cookies.get('user') and not request.cookies.get('rememberMe') and r == "1":
         if mcode:
             mongo.db.codes.update({'code': mcode},{'$set':{"used" : True, "usedBy": ''}})
-            #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
-            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
+            return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
+            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
         else:
-            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
     else:
         user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
         response = make_response(redirect('/#/profile/' + user['name']))
@@ -193,19 +192,25 @@ def checkUser():
             return json.dumps(False)
     except:
         return json.dumps(False)
-def generateCode():
-    x = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
-    codeType = "mentor"
-    genBy = "K3Vx"
-    d = {
-        'code': x,
-        'type': codeType,
-        'used': False,
-        'usedBy': '',
-        'generatedBy': genBy
-    }
-    mongo.db.codes.insert(d)
-    return d
+@app.route('/api/getStreams')
+def getTwitchStreams():
+    prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'type': 0 })
+    logins = ""
+    streamList = {}
+    for document in prep:
+        print(document['socials'])
+        try:
+            if document['socials']['twitch']:
+                logins = logins + "user_login=" + document['socials']['twitch'] + "&"
+                streamList[document['socials']['twitch']] = document['did']
+        except:
+            pass
+    headers = {'Client-ID': TWITCH_CLIENT_ID}
+    info = requests.get('https://api.twitch.tv/helix/streams?&game_id=21779&first=100&' + logins, headers=headers).json() 
+    for stream in info['data']:
+        stream['did'] = streamList[stream['user_name']]
+    print(info)
+    return json.dumps(info['data'])
 
 def getSkinList():
     skinList = {}
@@ -221,19 +226,5 @@ def getSkinList():
     with file[0].open("w+") as f:
         json.dump(skinList, f)
 
-def getTwitchStreams():
-    prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'type': 0 })
-    logins = ""
-    for document in prep:
-        print(document['socials'])
-        try:
-            if document['socials']['twitch']:
-                logins = logins + "user_login=" + document['socials']['twitch'] + "&"
-        except:
-            pass
-    print(logins)
-    headers = {'Client-ID': TWITCH_CLIENT_ID}
-    info = requests.get('https://api.twitch.tv/helix/streams?&game_id=21779&first=100&' + "user_login=loltyler1&user_login=aphromoo", headers=headers).json() 
-    print(info)
-    return info
+
     

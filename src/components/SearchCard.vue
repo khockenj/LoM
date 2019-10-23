@@ -23,7 +23,7 @@
     </b-list-group>
 
     <b-card-body class="mx-auto">
-      <b-button variant='success' :to="'/profile/' + name">View Mentor</b-button>
+      <b-button variant='success' :to="'/profile/' + did">View Mentor</b-button>
 		<!--<router-link class="card-link" :to="'/profile/' + name">View Mentor</router-link>-->
     </b-card-body>
   </b-card>
@@ -46,7 +46,7 @@
 <script>
 export default {
   name: 'SearchCard',
-  props: ['id', 'name', 'main', 'rank', 'champs', 'roles'],
+  props: ['id', 'name', 'main', 'rank', 'champs', 'roles', 'did'],
 methods: {
   switchVariant: function(r) {
     if(r == "adc") {

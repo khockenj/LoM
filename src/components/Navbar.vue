@@ -9,7 +9,7 @@
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
       <b-nav-item><router-link class="nav-link" to="/nowLive"><i class="fas fa-video textIcon" style='color:rgb(156,0,6);'></i>Live Mentors</router-link></b-nav-item>
-      <b-nav-item><router-link class="nav-link" to="/search">Search Mentors</router-link></b-nav-item>
+      <b-nav-item><router-link class="nav-link" to="/search"><i class="fas fa-search textIcon"></i>Search Mentors</router-link></b-nav-item>
       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
@@ -20,7 +20,7 @@
             <img style='max-width:32px;min-width:32px;' :src="p.profileData.main? '/static/squareicons/' + p.profileData.main.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"/>
             <em>{{p.profileData.name}}</em>
           </template>
-          <b-dropdown-item :to="'/profile/' + p.profileData.name"><i class="fas fa-user textIcon"></i>Your Profile</b-dropdown-item>
+          <b-dropdown-item :to="'/profile/' + p.profileData.did"><i class="fas fa-user textIcon"></i>Your Profile</b-dropdown-item>
           <b-dropdown-item to="/editProfile"><i class="fas fa-cog textIcon"></i>Settings</b-dropdown-item>
           <b-dropdown-item href="/logout"><i class="fas fa-sign-out-alt textIcon"></i>Sign Out</b-dropdown-item>
         </b-nav-item-dropdown>

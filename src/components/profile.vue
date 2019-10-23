@@ -115,10 +115,6 @@ import Achievements from './Achievements'
 import Requirements from './Requirements'
 import axios from 'axios'
 import skinlist from '../../static/skinList.json'
-//http://ddragon.leagueoflegends.com/cdn/9.20.1/data/en_US/champion/[champ].json 
-//-> get list of skins for each champ, add into a file as dict champ:{text: skinName, value: num}, save list so we can figure out which num belongs to which name
-//champ.data.skins[.name .num]
-//eg. {"Ekko": [{"name": "Trick or Treat Ekko", "value": 12}]}
 export default {
   name: 'ProfilePage',
     components: {
@@ -187,8 +183,8 @@ export default {
       }
     },
     getData: function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    //const path = '/api/profileInfo/' + this.$route.params.user
+    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;

@@ -39,8 +39,8 @@ var base = new Vue({
   methods: {
     checkUser: async function() {
     //console.log(document.cookie);
-     const path = 'http://localhost:5000/api/checkUser'
-     //const path = '/api/checkUser'
+     //const path = 'http://localhost:5000/api/checkUser'
+     const path = '/api/checkUser'
      axios.get(path)
      .then(response => {
        this.complete = true;
@@ -74,8 +74,8 @@ var Nav = new Vue({
    methods: {
     checkUser: async function() {
     //console.log(document.cookie);
-     const path = 'http://localhost:5000/api/checkUser'
-     //const path = '/api/checkUser'
+     //const path = 'http://localhost:5000/api/checkUser'
+     const path = '/api/checkUser'
      axios.get(path)
      .then(response => {
        this.complete = true;

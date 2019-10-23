@@ -55,7 +55,7 @@
   <div class="searchContainer">
   
    <b-card-group deck>
-  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs" :roles="m.roles" />
+  <search-card v-for="m in mentors" v-bind:key="m.id" :name="m.name" :main="m.main" :rank="m.rank" :champs="m.champs" :roles="m.roles" :did="m.did" />
   </b-card-group>
 
   </div>

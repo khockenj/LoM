@@ -471,8 +471,8 @@ export default {
     this.socialsList.forEach(function(x){
       vm.finalSocial[x] = vm[x];
     })
-    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.name;
-    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
+    //const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
     const data = {
       'did': this.$parent.$parent.profileData.did, //should be cookie
       'champs': this.removedChamps,
@@ -517,8 +517,8 @@ export default {
     })
   },
   getData:function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.name;
-    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
+    //const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
     axios.get(path)
     .then(response => {
       this.removedChamps = response.data.champs;
