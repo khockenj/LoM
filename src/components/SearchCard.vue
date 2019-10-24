@@ -14,7 +14,7 @@
 
     <b-list-group flush>
       <b-list-group-item style="padding:.75rem 1rem;background-color:inherit;" >
-        <img class='smallChamps' :key='c' v-for='c in champs' :src="'/static/squareicons/' + c.toLowerCase() + '_square.png'" :alt='c' />
+        <img class='smallChamps' :key='c' v-for='c in champs' :src="'/static/squareicons/' + c.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" :alt='c' />
         <span v-if='champs.length == 0'>None Available</span>
         </b-list-group-item>
 	  <b-list-group-item style="background-color:inherit;">

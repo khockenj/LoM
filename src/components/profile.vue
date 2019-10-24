@@ -5,12 +5,15 @@
 <b-jumbotron style="padding:1rem 1rem!important;" bg-variant="dark" text-variant="white" header-level="4" fluid>
      <div style="display:flex;">
     <div style="flex-grow:12;"><i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i><i class="fas fa-star-half-alt star" v-for="s in customRound(profileData.score-Math.floor(profileData.score))[0]"></i><i class="far fa-star star" v-for="s in 5-Math.ceil(profileData.score)+customRound(profileData.score-Math.floor(profileData.score))[1]"></i></div>
+    <div class="champHolder" style="flex-grow:0">
+      <img :key='m' class='smallChamp' :alt='m' v-for="m in profileData.champs" :src="'/static/squareicons/' + m.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" /> 
+      </div>
     <div class="iconHolder" style="flex-grow:0;">
-      <a v-if="profileData.socials.twitch" :href="'https://www.twitch.tv/' + profileData.socials.twitch"><i class="fab fa-twitch"></i></a>
-      <a v-if="profileData.socials.youtube" :href="'https://www.youtube.com/user/' + profileData.socials.youtube"><i class="fab fa-youtube"></i></a>
-      <a v-if="profileData.socials.discord" :href="'https://discord.gg/' + profileData.socials.discord"><i class="fab fa-discord"></i></a>
-      <a v-if="profileData.socials.twitter" :href="'https://www.twitter.com/' + profileData.socials.twitter"><i class="fab fa-twitter"></i></a>
-      <a v-if="profileData.socials.patreon" :href="'https://www.patreon.com/' + profileData.socials.patreon"><i class="fab fa-patreon"></i></a>
+      <a v-if="profileData.socials.twitch" :href="'https://www.twitch.tv/' + profileData.socials.twitch"><i class="fab fa-twitch profileSocial"></i></a>
+      <a v-if="profileData.socials.youtube" :href="'https://www.youtube.com/user/' + profileData.socials.youtube"><i class="fab fa-youtube profileSocial"></i></a>
+      <i v-if="profileData.socials.discord" v-b-tooltip.hover :title="profileData.socials.discord" class="fab fa-discord profileSocial" ></i></a>
+      <a v-if="profileData.socials.twitter" :href="'https://www.twitter.com/' + profileData.socials.twitter"><i class="fab fa-twitter profileSocial"></i></a>
+      <a v-if="profileData.socials.patreon" :href="'https://www.patreon.com/' + profileData.socials.patreon"><i class="fab fa-patreon profileSocial"></i></a>
       </div>
       </div>
     <span v-if='$parent.$parent.profileData'><i v-if='$parent.$parent.profileData.did == profileData.did' class="fas fa-cog" style="position: absolute;right:.6rem;top:4rem;" v-b-modal.settings></i></span>
@@ -19,24 +22,26 @@
   </b-jumbotron>  
 </div>
 <b-container style="max-width:1200px">
-    <b-row>
-        <b-col lg="6">
+    <b-row class='my-4'>
+        <b-col lg="12">
             <Plotly v-if="profileData.type == 'student'" style="height:100%;" :data="graphdata" :layout="layout" :displayModeBar="true"/>
-            <about-me :bio="profileData.bio" v-if="profileData.type == 'mentor'" style="height:100%;" />
+            <about-me :bio="profileData.bio" :champs='profileData.champs' :roles='profileData.roles' :rank='profileData.rank' v-if="profileData.type == 'mentor'" style="height:100%;" />
         </b-col>
-        <b-col lg="3">
+    </b-row>
+        <b-row>
+        <b-col lg="8">
             <goals v-if="profileData.type == 'student'" style="height:100%;"/>
             <achievements :achievements="profileData.achievements" v-if="profileData.type == 'mentor'" style="height:100%;" />
         </b-col>
-        <b-col lg="3">
+        <b-col lg="4">
             <stats v-if="profileData.type == 'student'" style="height:100%;"/>
             <requirements :requirements="profileData.requirements" v-if="profileData.type == 'mentor'" style="height:100%;" />
         </b-col>
-    </b-row>
+  </b-row>
     <b-row>
         <b-col style="padding:0">
     <b-jumbotron style="padding:1rem 1rem!important;margin-top:1rem;" bg-variant="dark" text-variant="white" header-level="4" fluid>
-    <template v-slot:header>Champions</template>
+    <template v-slot:header>Reviews</template>
   </b-jumbotron>
         </b-col>
  </b-row>
@@ -156,12 +161,14 @@ export default {
     saveBG: function() {
       console.log(this.selectedBG);
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
-      const path = 'http://localhost:5000/api/profileInfo/' + 'K3Vx'
+      const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
       //const path = '/api/profileInfo/' + this.p.name;
       axios.post(path, {'did': this.$parent.$parent.profileData.did, 'bg': this.profileData.bg})
     .then(response => {
       console.log(response);
       this.makeToast('Updated', 'Updated background', 'success')
+      this.selectedChamp = null;
+      this.selectedBG = null;
     })
     .catch(error => {
       this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
@@ -183,8 +190,8 @@ export default {
       }
     },
     getData: function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    const path = '/api/profileInfo/' + this.$route.params.user
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    //const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
@@ -245,7 +252,24 @@ export default {
 
 .iconHolder {
   text-align:right;
-  font-size:calc(12px + .6vw);
+  font-size:calc(12px + 1vw);
+  position:absolute;
+  right:1%;
 }
 
+.champHolder {
+  text-align:left;
+  font-size:calc(12px + 1vw);
+  position:absolute;
+  left:1%;
+}
+
+.smallChamp {
+  min-width:32px;
+  max-width:32px;
+  margin:.1vw;
+}
+.profileSocial {
+  padding:0;
+}
 </style>

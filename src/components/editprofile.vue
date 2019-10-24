@@ -13,12 +13,15 @@
       <b-col lg="2"  style="text-align:left;">    
     <label for="yourchamps">Your Champions:</label>
     </b-col>
-    <b-col lg="10">
+    <b-col lg="8">
     <b-form-input id='yourchamps' v-on:change='updateList' list='champions' v-model="champs"></b-form-input>
     <datalist autocomplete='off' class='champions' id='champions'>
     <option :key='c' v-for="c in champions" :value='c'>{{c}}</option>
   </datalist>
         </b-col>
+        <b-col lg='2'>
+          <b-button variant='success' v-on:click='updateList' block>Add Champion</b-button>
+          </b-col>
      </b-row>
      <b-form-group>
 
@@ -46,7 +49,7 @@
         </template>
         </b-form-select>
         </b-col>
-    <b-col lg="4"><b-button variant="success" block v-on:click='updateAccounts'>Add</b-button></b-col>
+    <b-col lg="4"><b-button variant="success" block v-on:click='updateAccounts'>Add Account</b-button></b-col>
   </b-row>
   <b-row style='padding-bottom:1rem'>
     <b-col lg="2" style="text-align:left;"><label for="youracc">Add Socials<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="Click one to add!"></i></label></b-col>
@@ -63,7 +66,7 @@
   </b-container>
   <b-container style='width:50%;'>
   <b-row style='align-items: center;'><b-col lg='12' class='border border-dark rounded'>
-      <h5>Your Socials</h5>
+      <h5>Your Socials<i class="fas fa-question-circle textIcon" v-b-tooltip.hover title="No URL required - just type in your username!"></i></h5>
     </b-col></b-row>
     <b-row style='align-items: center;' class="py-1 accounts border border-dark rounded" :key='socials' v-for="socials in socialsList">
     <b-col lg="1"><i style='padding-left:0;' :class="'fab fa-' + socials + ' no-hover py-1'"></i></b-col>
@@ -359,7 +362,15 @@ export default {
         if(this.removedChamps.length == 0){
           this.main = this.champs
         }
-        var perfectName = this.champs.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+        var perfectName = this.champs;
+        if(this.champs.includes("\'")) {
+          perfectName = this.champs.toLowerCase().split("\'").map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join("\'");
+        } else {
+          perfectName = this.champs.toLowerCase().split(' ').map((s) => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+        }
+        console.log(perfectName);
+        console.log(this.champions);
+        console.log(this.champions.includes(perfectName));
         if(this.removedChamps.length <= 5 && this.champions.includes(perfectName) && !this.removedChamps.includes(this.champs)) {
           this.removedChamps.push(perfectName);
         }
@@ -469,10 +480,14 @@ export default {
       vm.regionList.push(x.region);
     })
     this.socialsList.forEach(function(x){
-      vm.finalSocial[x] = vm[x];
+      if(vm[x].includes("/")) {
+        vm.finalSocial[x] = vm[x].substr(vm[x].lastIndexOf('/') + 1);
+      } else {
+        vm.finalSocial[x] = vm[x]
+      }
     })
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
-    const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
     const data = {
       'did': this.$parent.$parent.profileData.did, //should be cookie
       'champs': this.removedChamps,
@@ -513,7 +528,12 @@ export default {
     .then(response => {
       console.log(response);
       window.scrollTo(0, 0);
-      this.makeToast('Updated', 'You have saved your profile.', 'success')
+      if(this.$route.query.new != '1') {
+        this.makeToast('Updated', 'You have saved your profile.', 'success')
+      } else {
+        this.makeToast('Profile Created', 'You have created your profile!', 'success')
+         router.push({ name: "Dashboard"})
+      }
     })
     .catch(error => {
       this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
@@ -521,8 +541,8 @@ export default {
     })
   },
   getData:function() {
-    //const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
-    const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    const path = 'http://localhost:5000/api/profileInfo/' + this.$parent.$parent.profileData.did;
+    //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.did;
     axios.get(path)
     .then(response => {
       this.removedChamps = response.data.champs;

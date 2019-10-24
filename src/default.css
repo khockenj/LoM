@@ -72,17 +72,17 @@
 }
 
 .fa-discord {
-	color:#BEBEBE;
+	color:#7289da;
 }
 .fa-discord:hover {
-	color:#BEBEBE;
+	color:#7289da;
 }
 
 .fa-patreon {
-	color:#BEBEBE;
+	color:rgb(232, 91, 70)
 }
 .fa-patreon:hover {
-	color:#BEBEBE;
+	color:rgb(232, 91, 70)
 }
 .textIcon {
 	color:inherit;

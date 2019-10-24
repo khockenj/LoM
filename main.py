@@ -18,13 +18,13 @@ PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-#CORS(app)
+CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-#prodOrLocal = "http://localhost:" + port + "/"
-prodOrLocal = "https://lom-website-253818.appspot.com/"
+prodOrLocal = "http://localhost:" + port + "/"
+#prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('did', 'text')])  
 @app.route('/')
@@ -202,13 +202,14 @@ def getTwitchStreams():
         try:
             if document['socials']['twitch']:
                 logins = logins + "user_login=" + document['socials']['twitch'] + "&"
-                streamList[document['socials']['twitch']] = document['did']
+                streamList[document['socials']['twitch'].lower()] = document['did']
+                print(streamList)
         except:
             pass
     headers = {'Client-ID': TWITCH_CLIENT_ID}
     info = requests.get('https://api.twitch.tv/helix/streams?&game_id=21779&first=100&' + logins, headers=headers).json() 
     for stream in info['data']:
-        stream['did'] = streamList[stream['user_name']]
+        stream['did'] = streamList[stream['user_name'].lower()]
     print(info)
     return json.dumps(info['data'])
 

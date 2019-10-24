@@ -7,6 +7,7 @@ import ProfilePage from '../components/profile'
 import SignupPage from '../components/signup'
 import EditPage from '../components/editprofile'
 import NowLive from '../components/nowlive'
+import Dashboard from '../components/dashboard'
 Vue.use(Router)
 
 export default new Router({
@@ -45,6 +46,11 @@ export default new Router({
       path: '/nowLive',
       name: 'Now Live',
       component: NowLive
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
     },
   ]
 })

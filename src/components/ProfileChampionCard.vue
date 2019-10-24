@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style scoped>
-.img-holder {position: relative; display: inline-block;cursor:pointer;}
+.img-holder {position: relative; display: inline-block;}
 .img-holder img {display: block;}
 .lang {
   cursor: pointer;
