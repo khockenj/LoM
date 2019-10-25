@@ -24,7 +24,7 @@
               </b-row>
               <b-row>
                 <b-col lg="4"><h5>Roles: </h5></b-col>
-                <b-col><img :key='r' class='smallChamp' :alt='r' v-for="r in this.roles" :src="'/static/roles/Position_' + rank.replace(/^\w/, c => c.toUpperCase()).substring(-1, rank.indexOf('_') != -1 ? rank.indexOf('_') : rank.length) + '-' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'" /></b-col>
+                <b-col><img :key='r' class='smallChamp' v-b-tooltip.hover :title="r.replace(/^\w/, c => c.toUpperCase())" :alt='r' v-for="r in this.roles" :src="r == 'teams'? '/static/roles/fill.png':'/static/roles/Position_' + rank.replace(/^\w/, c => c.toUpperCase()).substring(-1, rank.indexOf('_') != -1 ? rank.indexOf('_') : rank.length) + '-' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'" /></b-col>
               </b-row>
             </b-container>
             </b-col>
@@ -39,7 +39,7 @@ export default {
   name: 'AboutMe',
   props: ['bio', 'champs', 'roles', 'rank'],
   mounted: function() {
-    if(!this.rank) {
+    if(!this.rank || this.rank == "default") {
       this.rank = "challenger"
     }
   }

@@ -37,8 +37,8 @@ export default {
   },
   methods: {
       getData: function() {
-    const path = 'http://localhost:5000/api/getStreams'
-    //const path = '/api/getStreams'
+    //const path = 'http://localhost:5000/api/getStreams'
+    const path = '/api/getStreams'
     axios.get(path)
     .then(response => {
       this.live = response.data;

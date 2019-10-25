@@ -47,11 +47,7 @@
  </b-row>
          
         
-    <b-row style="padding-top:0;">
-        <b-col v-for="m in profileData.champs" v-bind:key="m" :champ="m">
-            <profile-champion :champ="m" :main="profileData.main"/>
-        </b-col>
-    </b-row>
+   
 </b-container>
 
 <b-modal @ok="saveBG" id="settings" ok-title="Save">   
@@ -159,10 +155,11 @@ export default {
         })
       },
     saveBG: function() {
-      console.log(this.selectedBG);
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
-      const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
-      //const path = '/api/profileInfo/' + this.p.name;
+
+      //const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
+      const path = '/api/profileInfo/' + this.p.name;
+
       axios.post(path, {'did': this.$parent.$parent.profileData.did, 'bg': this.profileData.bg})
     .then(response => {
       console.log(response);
@@ -190,8 +187,8 @@ export default {
       }
     },
     getData: function() {
-    const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
-    //const path = '/api/profileInfo/' + this.$route.params.user
+    //const path = 'http://localhost:5000/api/profileInfo/' + this.$route.params.user
+    const path = '/api/profileInfo/' + this.$route.params.user
     axios.get(path)
     .then(response => {
       this.profileData = response.data;
