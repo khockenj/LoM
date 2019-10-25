@@ -158,7 +158,7 @@ export default {
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
 
       //const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
-      const path = '/api/profileInfo/' + this.p.name;
+      const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
 
       axios.post(path, {'did': this.$parent.$parent.profileData.did, 'bg': this.profileData.bg})
     .then(response => {

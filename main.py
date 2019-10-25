@@ -18,13 +18,13 @@ PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-CORS(app)
+#CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-prodOrLocal = "http://localhost:" + port + "/"
-#prodOrLocal = "https://lom-website-253818.appspot.com/"
+#prodOrLocal = "http://localhost:" + port + "/"
+prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('did', 'text')])  
 @app.route('/')
@@ -226,6 +226,3 @@ def getSkinList():
     file = [x for x in p if x.is_file()]
     with file[0].open("w+") as f:
         json.dump(skinList, f)
-
-
-    
