@@ -23,8 +23,8 @@ app = Flask(__name__,
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
-#prodOrLocal = "http://localhost:" + port + "/"
-prodOrLocal = "https://lom-website-253818.appspot.com/"
+prodOrLocal = "http://localhost:" + port + "/"
+#prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('did', 'text')])  
 @app.route('/')
@@ -50,16 +50,16 @@ def login():
     r = request.args.get('r')
     mcode = request.args.get('mcode')
     if not request.cookies.get('user') and not request.cookies.get('rememberMe') and r != "1":
-        return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-        #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join")
+        #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+        return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D0%26m%3D0&response_type=code&scope=identify%20email%20guilds.join")
     elif not request.cookies.get('user') and not request.cookies.get('rememberMe') and r == "1":
         if mcode:
             mongo.db.codes.update({'code': mcode},{'$set':{"used" : True, "usedBy": ''}})
-            return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
-            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
+            #return redirect("https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20guilds.join%20email")
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D1&response_type=code&scope=identify%20email%20guilds.join')
         else:
-            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
-            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            #return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=https%3A%2F%2Flom-website-253818.appspot.com%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
+            return redirect('https://discordapp.com/api/oauth2/authorize?client_id=628252746365140999&redirect_uri=http%3A%2F%2Flocalhost%3A5000%2Fcallback%3Fr%3D1%26m%3D0&response_type=code&scope=identify%20email%20guilds.join')
     else:
         user = mongo.db.users.find_one({"did": request.cookies.get("duser")})
         response = make_response(redirect('/#/profile/' + user['name']))

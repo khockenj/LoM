@@ -51,8 +51,8 @@ export default {
   components: {},
   methods: {
     checkCode: function(bvModalEvt) {
-    //const path = 'http://localhost:5000/api/checkCode/' + this.mcode;
-    const path = '/api/checkCode/' + this.mcode;
+    const path = 'http://localhost:5000/api/checkCode/' + this.mcode;
+    //const path = '/api/checkCode/' + this.mcode;
     bvModalEvt.preventDefault();
     axios.get(path)
     .then(response => {
@@ -76,7 +76,7 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0,0,0, 0.4) !important;
-  background-image:url('/static/backgrounds/yasuo.jpg');
+  background-image:url('/static/backgrounds/splash/Yasuo_0.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;

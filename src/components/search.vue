@@ -32,7 +32,7 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0,0,0, 0.4) !important;
-  background-image:url('/static/backgrounds/zed.jpg');
+  background-image:url('/static/backgrounds/splash/Zed_13.jpg');
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
