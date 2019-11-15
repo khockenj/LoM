@@ -5,55 +5,28 @@
   <b-row> 
     <b-col lg="9">
       <b-container>
-        <b-row>
-          <b-col lg="12">
-      <b-card
-        border-variant="dark"
-        header="Sofia perma-banned from server!"
-        header-bg-variant="dark"
+      <b-row>
+     <b-col lg="12">
+      <b-card no-body
+        border-variant="primary"
+        header-bg-variant="primary"
         header-text-variant="white"
         align="center"
+        header="Recent News"
       >
-        <b-card-text>k3vx will reign as new supreme king now. read more.</b-card-text>
       </b-card>
       </b-col>
         </b-row>
         <b-row>
           <b-col lg="12">
-      <b-card
+      <b-card v-for='p in newsData' :key='p._id.$oid'
         border-variant="dark"
-        header="Faker joins the mentoring team"
+        :header="p.title"
         header-bg-variant="dark"
         header-text-variant="white"
         align="center"
       >
-        <b-card-text>SKT T1 player Faker will be joining our mentoring staff as of his latest defeat at Worlds 2019. He is taking some time off from professional League to coach prime NA talent.</b-card-text>
-      </b-card>
-      </b-col>
-        </b-row>
-         <b-row>
-          <b-col lg="12">
-      <b-card
-        border-variant="dark"
-        header="LoM tournament for $100k"
-        header-bg-variant="dark"
-        header-text-variant="white"
-        align="center"
-      >
-        <b-card-text>On Feb. 29th 2021, League of Mentoring will be hosting a tournament for $100k USD!</b-card-text>
-      </b-card>
-      </b-col>
-        </b-row>
-        <b-row>
-          <b-col lg="12">
-      <b-card
-        border-variant="dark"
-        header="garbage cans invade my soloq games...surprise!"
-        header-bg-variant="dark"
-        header-text-variant="white"
-        align="center"
-      >
-        <b-card-text>yeah whatever bro</b-card-text>
+        <b-card-text>{{p.post}}</b-card-text>
       </b-card>
       </b-col>
         </b-row>
@@ -61,25 +34,36 @@
     </b-col>
       <b-col lg="3">
       <b-card
-        border-variant="info"
+        border-variant="primary"
         header="Recents"
-        header-bg-variant="info"
+        header-bg-variant="primary"
         header-text-variant="white"
         align="center"
       >
      <b-list-group flush>
        <!--bg yellow to represent accepted, incomplete, bg green to represent accepted complete, red to declined-->
-      <b-list-group-item variant='warning' href="#" v-b-modal.test><b-badge variant='info'>PENDING</b-badge>Doublelift (<i>11/16/19@2pm</i>)</b-list-group-item>
-      <b-list-group-item variant='warning' href="#"><b-badge variant='primary'>ACCEPTED</b-badge>Milk Shake (<i>11/4/19@7pm</i>)</b-list-group-item>
-      <b-list-group-item variant='danger' href="#"><b-badge variant='danger'>DECLINED</b-badge>Sneaky (<i>12/30/19@5pm</i>)</b-list-group-item>
-      <b-list-group-item variant='warning' href="#"><b-badge variant='warning'>RESCHEDULE</b-badge>Sneaky (<i>12/31/19@1pm</i>)</b-list-group-item>
-      <b-list-group-item variant='success' href="#"><b-badge variant='success'>ACCEPTED</b-badge>George (<i>9/16/19@9am</i>)</b-list-group-item>
+      <b-list-group-item  
+      href="#" :key='session._id.$oid' v-for='session in coachingData' @click="$bvModal.show(session._id.$oid)" 
+      :variant="
+      (session.status=='complete' && session.complete) ? 'success'
+         : (session.status=='declined' && session.complete) ? 'danger'
+         : (Date.now() > session.dt) ? 'danger'
+         : 'warning'
+         ">
+        <b-badge v-if="session.status == 'pending'" variant='info'>PENDING</b-badge>
+        <b-badge v-if="session.status == 'declined'" variant='danger'>DECLINED</b-badge>
+        <b-badge v-if="session.status == 'reschedule'" variant='warning'>RESCHEDULE</b-badge>
+        <b-badge v-if="session.status == 'accepted'" variant='primary'>ACCEPTED</b-badge>
+        <b-badge v-if="session.status == 'complete'" variant='success'>COMPLETE</b-badge>
+        {{session.studentName}} (<i>{{new Date(session.dt.$date).toLocaleDateString()}}</i>)
+        </b-list-group-item>
+     
     </b-list-group>
       </b-card>
       </b-col>
       </b-row>
 </b-container>
-<b-modal id="test">   
+<b-modal :key='session._id.$oid' v-for='session in coachingData' :id='session._id.$oid'>   
    <template v-slot:modal-title>
       Session Information
     </template>
@@ -113,6 +97,8 @@
 
 </template>
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Dashboard',
   data() {
@@ -129,8 +115,63 @@ export default {
           { value: 'complete', text: 'Complete'},
           { value: 'incomplete', text: 'Incomplete'}
       ],
+      coachingData: null,
+      newsData: null
     }
-  }
+  },
+  methods: {
+    getCoachingData: function() {
+      //this.$route.params.user
+    const path = 'http://localhost:5000/api/getCoaching/' + "175387337054879744"
+    //const path = '/api/getCoaching/' + this.$route.params.user
+    axios.get(path)
+    .then(response => {
+      this.coachingData = response.data;
+      console.log(this.coachingData);
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+  },
+  getNewsData: function() {
+    const path = 'http://localhost:5000/api/getNews'
+    //const path = '/api/getNews'
+    axios.get(path)
+    .then(response => {
+      this.newsData = response.data;
+      console.log(this.newsData);
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+  },
+  saveData: function() {
+      const path = 'http://localhost:5000/api/profileInfo/' + this.p.name;
+      //const path = '/api/profileInfo/' + this.$parent.$parent.profileData.name;
+
+      axios.post(path, {'did': this.$parent.$parent.profileData.did, 'bg': this.profileData.bg})
+    .then(response => {
+      console.log(response);
+      this.makeToast('Updated', 'Updated background', 'success')
+      this.selectedChamp = null;
+      this.selectedBG = null;
+    })
+    .catch(error => {
+      this.makeToast('Error', "Err - there's been an error in the back. Try again or report it - thank you!", 'danger');
+      console.log(error)
+    })
+
+    },
+  },
+  mounted: async function(){
+    await this.$parent;
+    console.log(this.$parent);
+    this.getCoachingData();
+    this.getNewsData();
+  },
+
   }
 </script>
 

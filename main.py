@@ -18,7 +18,7 @@ PATCH = '9.20.1'
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
-#CORS(app)
+CORS(app)
 #only need cors when local
 #app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
@@ -212,6 +212,18 @@ def getTwitchStreams():
         stream['did'] = streamList[stream['user_name'].lower()]
     print(info)
     return json.dumps(info['data'])
+
+@app.route('/api/getCoaching/<user>')
+def getCoaching(user):
+    prep = mongo.db.coaching.find({"mentor": user})
+    return json.dumps([c for c in prep], default=json_util.default)
+
+@app.route('/api/getNews')
+def getNews():
+    prep = mongo.db.news.find().sort([("date", -1)])
+    return json.dumps([c for c in prep], default=json_util.default)
+
+
 
 def getSkinList():
     skinList = {}
