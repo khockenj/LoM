@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, make_response, url_for
+from flask import Flask, render_template, redirect, request, make_response, url_for, jsonify
 from flask_pymongo import PyMongo
 from bson import json_util
 import json
@@ -9,24 +9,36 @@ import random, string
 import dns
 import hashlib
 from pathlib import Path
-CLIENT_SECRET ="hx984-Qq67PLmssoCtcUBhLEHrXP74gG"
-CLIENT_ID = "628252746365140999"
-RIOT_API_KEY = "RGAPI-4ac0abf7-9c24-4dc8-bcd5-fb3aa0deca30"
-TWITCH_CLIENT_ID = "pkub3dts9nt6m2kktxu7suk3iqk57n"
-TWITCH_CLIENT_SECRET = "0c3bc8ubtedes3jhqha1kid8ztgezd"
-PATCH = '9.20.1'
+from shutil import unpack_archive
+keys = {}
+keyPath = Path('./').glob('keys.json')
+keyList = [x for x in keyPath if x.is_file()]
+with keyList[0].open("r") as f:
+    keys = json.loads(f.read())
+    f.close()
+CLIENT_SECRET = keys['CLIENT_SECRET']
+CLIENT_ID = keys['CLIENT_ID']
+RIOT_API_KEY = keys['RIOT_API_KEY']
+TWITCH_CLIENT_ID = keys['TWITCH_CLIENT_ID']
+TWITCH_CLIENT_SECRET = keys['TWITCH_CLIENT_SECRET']
+PATCH = keys['PATCH']
+
 app = Flask(__name__,
             static_folder = "./dist/static",
             template_folder = "./dist")
 CORS(app)
 #only need cors when local
-#app.config["MONGO_URI"] = "mongodb://localhost:27017/lom"  
+
 app.config["MONGO_URI"] = "mongodb+srv://admin2:etnl4OefU7uuTh00@lom-wlgkz.gcp.mongodb.net/lom?retryWrites=true&w=majority"
 port = "5000"
 prodOrLocal = "http://localhost:" + port + "/"
 #prodOrLocal = "https://lom-website-253818.appspot.com/"
 mongo = PyMongo(app)
 mongo.db.users.create_index([('did', 'text')])  
+
+#Need to send user along with request to ensure the request is not changing another user
+#IMPORTANT
+
 @app.route('/')
 def index():
     #search by did, find user, make sure hashed id = cookie id
@@ -208,14 +220,21 @@ def getTwitchStreams():
             pass
     headers = {'Client-ID': TWITCH_CLIENT_ID}
     info = requests.get('https://api.twitch.tv/helix/streams?&game_id=21779&first=100&' + logins, headers=headers).json() 
-    for stream in info['data']:
-        stream['did'] = streamList[stream['user_name'].lower()]
-    print(info)
-    return json.dumps(info['data'])
+    try:
+        for stream in info['data']:
+            stream['did'] = streamList[stream['user_name'].lower()]
+        print(info)
+        return json.dumps(info['data'])
+    except:
+        return json.dumps([])
 
-@app.route('/api/getCoaching/<user>')
+@app.route('/api/getCoaching/<user>', methods=['GET'])
 def getCoaching(user):
-    prep = mongo.db.coaching.find({"mentor": user})
+    if request.args.get('complete'):
+        if(request.args.get('complete') == '1'):
+            prep = mongo.db.coaching.find({"mentor": user, "complete": True, "reviewTitle":  {"$exists" : True, "$ne" : ""}})
+    else:
+        prep = mongo.db.coaching.find({"mentor": user})
     return json.dumps([c for c in prep], default=json_util.default)
 
 @app.route('/api/getNews')
@@ -223,18 +242,72 @@ def getNews():
     prep = mongo.db.news.find().sort([("date", -1)])
     return json.dumps([c for c in prep], default=json_util.default)
 
-
-
+@app.route('/api/getSkinList', methods=['POST'])
 def getSkinList():
-    skinList = {}
-    championList = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion.json').json()
-    for champ in championList['data']:
-        c = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion/' + champ + '.json').json()
-        skinList[champ] = []
-        print(champ)
-        for skin in c['data'][champ]['skins']:
-            skinList[champ].append({"name": skin['name'], "id": skin['num']})
-    p = Path('./static').glob('skinList.json')
-    file = [x for x in p if x.is_file()]
-    with file[0].open("w+") as f:
-        json.dump(skinList, f)
+#This will update skin/champion lists -> still need to manually update splashes + add new champs to square_icons via community dragon + .ddragon in riot disc
+    user = request.get_json()
+    adminCheck = mongo.db.users.find_one({"did": user['did'], "admin": True})
+    if adminCheck:
+        try:
+            skinList = {}
+            championList = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion.json').json()
+            for champ in championList['data']:
+                c = requests.get('http://ddragon.leagueoflegends.com/cdn/' + PATCH + '/data/en_US/champion/' + champ + '.json').json()
+                skinList[champ] = []
+                print(champ)
+                for skin in c['data'][champ]['skins']:
+                    skinList[champ].append({"name": skin['name'], "id": skin['num']})
+            #Also we should just update Champion List while we pull it       
+            p1 = Path('./static').glob('champions.json')
+            file1 = [x for x in p1 if x.is_file()]
+            with file1[0].open("w+") as f:
+                json.dump(championList, f)
+            #Update Skins
+            p = Path('./static').glob('skinList.json')
+            file = [x for x in p if x.is_file()]
+            with file[0].open("w+") as f:
+                json.dump(skinList, f)
+            splashes = "https://ddragon.leagueoflegends.com/cdn/dragontail-" + PATCH + ".tgz"
+            # response = requests.get(splashes, stream=True)
+            # if response.status_code == 200:
+            # with open(target_path, 'wb') as f:
+            #     f.write(response.raw.read())
+            return "true"
+        except:
+            return "false"
+
+@app.route('/api/changeAPIKeys', methods=['POST'])
+def changeAPIKeys():
+    data = request.get_json()
+    adminCheck = mongo.db.users.find_one({"did": data['did'], "admin": True})
+    if adminCheck:
+        if not data['keyType']:
+            print({'keys': list(keys.keys()), 'patch': keys['PATCH']})
+            return {'keys': list(keys.keys()), 'patch': keys['PATCH']}
+        else:
+            try:
+                keys[data['keyType']] = data['new_key']
+                print(keys)
+                with keyList[0].open("w+") as f:
+                    json.dump(keys, f)
+                return "true"
+            except:
+                return "false"
+@app.route('/api/generateCode', methods=['POST'])
+def generateCode():
+    data = request.get_json()
+    adminCheck = mongo.db.users.find_one({"did": data['did'], "admin": True})
+    if adminCheck:
+        x = ''.join(random.choices(string.ascii_letters + string.digits, k=16))
+        codeType = data['codeType']
+        genBy = adminCheck['name']
+        d = {
+            'code': x,
+            'type': codeType,
+            'used': False,
+            'usedBy': '',
+            'generatedBy': genBy
+        }
+        mongo.db.codes.insert(d)
+        return x
+    return "false"

@@ -1,68 +1,118 @@
 <template>
   <b-card
-  text-variant="white"
-  bg-variant="dark"
+    text-variant="white"
     no-body
-    style="max-width:15rem;min-width:15rem;border:1px solid white;"
-	:img-src="main? '/static/squareicons/' + main.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"
-    img-alt="Image"
+    style="max-width:18rem;min-width:18rem;background-color:transparent;"
     img-top
+    :img-src="main? '/static/tiles/' + main.replace(/[^A-Z0-9]/ig, '') + '_0.jpg': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"
   >
     <template v-slot:header>
-      <h4 class="mb-0" :to="'/profile/' + name">{{name}} <img class="rankIcon" :src="'/static/ranks/' + rank + '.png'" /></h4>
+      <h4 class="mb-0">
+        <span  v-b-tooltip.hover.top="{ variant: 'danger' }" :title='name'>{{cutName(name)}}</span>
+        <img class="rankIcon" :src="'/static/ranks/' + rank + '.png'" v-b-tooltip.hover.top="{ variant: 'warning' }" :title="(rank[0].toUpperCase() + rank.slice(1)).replace(/_/g, ' ')" />
+      </h4>
     </template>
 
     <b-list-group flush>
-      <b-list-group-item style="padding:.75rem 1rem;background-color:inherit;" >
-        <img class='smallChamps' :key='c' v-for='c in champs' :src="'/static/squareicons/' + c.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'" :alt='c' />
-        <span v-if='champs.length == 0'>None Available</span>
-        </b-list-group-item>
-	  <b-list-group-item style="background-color:inherit;">
-      <b-badge class='badge' v-for='r in roles' :key='r' :variant='switchVariant(r)'>{{r.toUpperCase()}}</b-badge>
-      <b-badge v-if='roles.length == 0'>NONE</b-badge></b-list-group-item>
+      <b-list-group-item style="padding:.75rem 1rem;background-color:#343A40;">
+        <img
+          style='max-width:2.5rem;'
+          :id='c'
+          :src="'/static/squareicons/' + c.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'"
+          :alt="c"
+          v-for="c in champs" :key="c"
+          class='smallChamps'
+          v-b-tooltip.hover.top="{ variant: 'info' }"
+          :title='c'
+        />
+        <span v-if="champs.length == 0"><img
+          class="smallChamps"
+          style='width:2.5rem'
+          src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII="
+          v-b-tooltip.hover.top="'Unknown'"
+        /></span>
+
+      </b-list-group-item>
+      <b-list-group-item
+        style="background-color:#343A40;height:4.5rem;padding-top:.75rem;padding-bottom:.75rem;"
+      >
+        <b-badge
+          class="badge"
+          v-for="r in roles"
+          :key="r"
+          :variant="switchVariant(r)"
+        >{{r.toUpperCase()}}</b-badge>
+        <b-badge v-if="roles.length == 0">NONE</b-badge>
+      </b-list-group-item>
     </b-list-group>
 
-    <b-card-body class="mx-auto">
-      <b-button variant='success' :to="'/profile/' + did">View Mentor</b-button>
-		<!--<router-link class="card-link" :to="'/profile/' + name">View Mentor</router-link>-->
-    </b-card-body>
+    <div class="footer-button">
+      <!--Using hidden button to retain the space-->
+      <b-button style='visibility: hidden;'><i class="textIcon"></i></b-button>
+      <b-button style='position:absolute;bottom:1rem;left:4.6rem;' variant="success" :to="'/profile/' + did"><i class="fas fa-search textIcon"></i>View Mentor</b-button>
+    </div>
   </b-card>
 </template>
 <style scoped>
 .rankIcon {
-	max-width:48px;
-	max-height:48px;
-	vertical-align: middle;
+  max-width: 48px;
+  max-height: 48px;
+  vertical-align: middle;
 }
 .smallChamps {
-  max-width:2rem;
-  margin:.05rem;
+  max-width: 2.5rem;
+  margin: 0.07rem;
 }
 .badge {
-  margin:.1rem;
+  margin: 0.1rem;
+}
+.card-img-top, .card-img {
+  width: 100%;
+  object-fit: cover;
+}
+.footer-button {
+  padding:1rem;
+  height:100%;
+  background-color:#343A40;
+  border-bottom-right-radius: calc(0.25rem - 1px);
+  border-bottom-left-radius: calc(0.25rem - 1px);
+}
+
+.card-header{
+  background-color:rgba(0,0,0,.8);
+}
+h4 {
+  font-size:1.75rem;
+}
+.list-group-item {
+   margin-bottom:.25rem;
 }
 </style>
 
 <script>
 export default {
-  name: 'SearchCard',
-  props: ['id', 'name', 'main', 'rank', 'champs', 'roles', 'did'],
-methods: {
-  switchVariant: function(r) {
-    if(r == "adc") {
-      return "danger"
-    } else if(r == "middle") {
-      return "primary"
-    } else if(r == "jungle") {
-      return "success" 
-    } else if(r == "support") {
-      return "warning"
-    } else if (r == "top") {
-      return "light"
-    } else if(r == "teams"){
-      return "info"
+  name: "SearchCard",
+  props: ["id", "name", "main", "rank", "champs", "roles", "did"],
+  methods: {
+    switchVariant: function(r) {
+      if (r == "adc") {
+        return "danger";
+      } else if (r == "middle") {
+        return "primary";
+      } else if (r == "jungle") {
+        return "success";
+      } else if (r == "support") {
+        return "warning";
+      } else if (r == "top") {
+        return "light";
+      } else if (r == "teams") {
+        return "info";
+      }
+    },
+    cutName: function(name) {
+      return name.length > 10 ? name.substring(name,10) + "..." : name
     }
-  }
-}
-}
+  },
+
+};
 </script>

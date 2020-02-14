@@ -3,6 +3,7 @@ import router from './router'
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'vue-search-select/dist/VueSearchSelect.css'
 import axios from 'axios'
 import './default.css'
 import MentorSearch from './components/MentorSearch'
@@ -10,6 +11,7 @@ import Navbar from './components/Navbar'
 import SearchCard from './components/SearchCard'
 import App from './components/App'
 import Champions from '../static/champions.json'
+
 import SearchPage from './components/search'
 const http = require('http')
 const fs = require('fs')
@@ -24,7 +26,7 @@ var base = new Vue({
    template: '<App/>',
    el: "#app",
    components: {
-	App
+  App
    },
    build: {
     assetsPublicPath: '/',

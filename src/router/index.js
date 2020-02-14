@@ -8,6 +8,7 @@ import SignupPage from '../components/signup'
 import EditPage from '../components/editprofile'
 import NowLive from '../components/nowlive'
 import Dashboard from '../components/dashboard'
+import Admin from '../components/Admin'
 Vue.use(Router)
 
 export default new Router({
@@ -51,6 +52,11 @@ export default new Router({
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
+    },
+    {
+      path: '/admin',
+      name: 'Admin',
+      component: Admin
     },
   ]
 })

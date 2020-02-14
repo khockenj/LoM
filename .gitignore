@@ -4,7 +4,8 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
+/static/
+keys.json
 # Editor directories and files
 .idea
 .vscode
@@ -12,3 +13,4 @@ yarn-error.log*
 *.ntvs*
 *.njsproj
 *.sln
+
