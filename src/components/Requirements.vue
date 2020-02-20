@@ -58,7 +58,7 @@
             <i class="fas fa-question-circle textIcon-color" id="champPopover"></i>
             <b-popover target="champPopover" triggers="hover" placement="top">
               <template v-slot:title>Champ Match</template>
-              Mentor requires you must match at least one of their champions listed
+              Mentor requires you must match at least one of their champions listed:
               <br />
               <img
                 style="max-width:2.5rem;"
@@ -86,7 +86,7 @@
             <i class="fas fa-question-circle textIcon-color" id="serverPopover"></i>
             <b-popover target="serverPopover" triggers="hover" placement="top">
               <template v-slot:title>Server Match</template>
-              Mentor requires you must match at least one of their servers listed
+              Mentor requires you must match at least one of their servers listed:
               <br />
               <b-badge
                 class="popover-badge"
