@@ -214,7 +214,7 @@
             name="yourroles"
           >
           <b-form-checkbox :key=role.value :value="role.value" v-for='role in roleOptions'>
-            <img v-if='role.text != "Fill"' :src="'/static/roles/Position_Challenger-' + role.text + '.png'"  v-b-tooltip.hover
+            <img v-if='role.text != "Fill"' :src="'/static/roles/' + role.text + '.png'" style='max-width:72px;'  v-b-tooltip.hover
                 :title="role.text"/>
             <img v-if='role.text == "Fill"' :src="'/static/roles/fill.png'" style='max-width:72px;' v-b-tooltip.hover
                 title="Competitive/Teams" />
@@ -524,13 +524,21 @@ export default {
         { value: "italian", text: "Italian" }
       ],
       roleOptions: [
-        { value: "top", text: "Top" },
-        { value: "jungle", text: "Jungle" },
-        { value: "middle", text: "Middle" },
-        { value: "adc", text: "Adc" },
-        { value: "support", text: "Support" },
-        { value: "teams", text: "Fill" }
+        {value: "top", text: "Top" },
+        {value: "jungle", text: "Jungle" },
+        {value: "middle", text: "Middle" },
+        {value: "adc", text: "Adc" },
+        {value: "support", text: "Support" },
+        {value: "teams", text: "Fill" }
       ],
+      roleSort: {
+        "top": 0,
+        "jungle": 1,
+        "middle": 2,
+        "adc": 3,
+        "support": 4,
+        "teams": 5
+      },
       minmaxOptions: [
         { value: "min", text: "at least" },
         { value: "max", text: "at most" }
@@ -685,6 +693,9 @@ export default {
         toaster: "b-toaster-top-center"
       });
     },
+    sortRoles: function() {
+      this.selectedRoles = this.selectedRoles.sort((a, b) => this.roleSort[a] - this.roleSort[b]);
+    },
     updateAccounts: function() {
       var vm = this;
       var dupe = false;
@@ -801,6 +812,7 @@ export default {
           vm.finalSocial[x] = vm[x];
         }
       });
+      this.sortRoles();
       const path =
         "http://localhost:5000/api/profileInfo/" +
         this.$parent.$parent.profileData.did;

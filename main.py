@@ -205,7 +205,7 @@ def checkUser():
     except:
         return json.dumps(False)
 @app.route('/api/getStreams')
-def getTwitchStreams():
+def getStreams():
     prep = mongo.db.users.find({"type": "mentor"}, { 'ip': 0, 'type': 0 })
     logins = ""
     streamList = {}
@@ -268,10 +268,6 @@ def getSkinList():
             with file[0].open("w+") as f:
                 json.dump(skinList, f)
             splashes = "https://ddragon.leagueoflegends.com/cdn/dragontail-" + PATCH + ".tgz"
-            # response = requests.get(splashes, stream=True)
-            # if response.status_code == 200:
-            # with open(target_path, 'wb') as f:
-            #     f.write(response.raw.read())
             return "true"
         except:
             return "false"

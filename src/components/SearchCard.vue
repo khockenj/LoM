@@ -2,13 +2,14 @@
   <b-card
     text-variant="white"
     no-body
-    style="max-width:18rem;min-width:18rem;background-color:transparent;"
+    style="max-width:18.1rem;min-width:18.1rem;background-color:transparent;border:2px solid black;"
     img-top
     :img-src="main? '/static/tiles/' + main.replace(/[^A-Z0-9]/ig, '') + '_0.jpg': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"
   >
     <template v-slot:header>
-      <h4 class="mb-0">
-        <span  v-b-tooltip.hover.top="{ variant: 'danger' }" :title='name'>{{cutName(name)}}</span>
+      <h4 class="mb-0" :id='name'>
+        <span v-if='name.length <= 10' v-b-tooltip.hover.top="{ variant: 'danger' }" :title='name'>{{name}}</span>
+        <span style='font-size:.8rem;' v-if='name.length > 10' v-b-tooltip.hover.top="{ variant: 'danger' }" :title='name'>{{name}}</span>
         <img class="rankIcon" :src="'/static/ranks/' + rank + '.png'" v-b-tooltip.hover.top="{ variant: 'warning' }" :title="(rank[0].toUpperCase() + rank.slice(1)).replace(/_/g, ' ')" />
       </h4>
     </template>
@@ -34,15 +35,24 @@
 
       </b-list-group-item>
       <b-list-group-item
-        style="background-color:#343A40;height:4.5rem;padding-top:.75rem;padding-bottom:.75rem;"
+        style="padding:.75rem 1rem;background-color:#343A40;"
       >
-        <b-badge
-          class="badge"
-          v-for="r in roles"
-          :key="r"
-          :variant="switchVariant(r)"
-        >{{r.toUpperCase()}}</b-badge>
-        <b-badge v-if="roles.length == 0">NONE</b-badge>
+<img
+                    :key="r"
+                    class="smallChamps"
+      
+                    v-b-tooltip.hover
+                    :title="r.replace(/^\w/, c => c.toUpperCase())"
+                    :alt="r"
+                    v-for="r in roles"
+                    :src="r == 'teams'? '/static/roles/Clash.svg':'/static/roles/' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'"
+                  />
+          <span v-if="roles.length == 0"><img
+          class="smallChamps"
+          style='width:2.5rem'
+          src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII="
+          v-b-tooltip.hover.top="'Unknown'"
+        /></span>
       </b-list-group-item>
     </b-list-group>
 
@@ -110,6 +120,7 @@ export default {
       }
     },
     cutName: function(name) {
+      //No longer in use, but will cut name after 10 characters if > 10
       return name.length > 10 ? name.substring(name,10) + "..." : name
     }
   },

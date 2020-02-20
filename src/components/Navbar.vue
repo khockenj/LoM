@@ -50,7 +50,7 @@
         </b-nav-item-dropdown>
       </b-navbar-nav>
 
-      <b-navbar-nav class="ml-auto" v-if="!p.loggedIn" right>
+      <b-navbar-nav class="ml-auto" v-if="p && p.loggedIn == false" right>
         <b-button class="mx-2" variant="primary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
         <b-button variant="success" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
       </b-navbar-nav>
@@ -65,10 +65,13 @@
 <script>
 export default {
   name: "Navbar",
-  props: ["p"],
   methods: {},
-  data: {},
-  mounted: async function() {
+  data: function() {
+    return {
+      p: null
+    }
+  },
+  beforeCreate: async function() {
     this.p = await this.$parent;
   }
 };

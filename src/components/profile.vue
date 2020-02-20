@@ -10,7 +10,7 @@
         fluid
       >
         <div style="display:flex;">
-          <div style="flex-grow:12;">
+          <div style="flex-grow:12;" v-on:click="scrollToReviews">
             <i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i>
             <i
               class="fas fa-star-half-alt star"
@@ -98,7 +98,7 @@
             :bio="profileData.bio"
             :champs="profileData.champs"
             :roles="profileData.roles"
-            :rank="profileData.rank"
+            :rank="profileData.rank == 'default' || !profileData.rank ? 'challenger':profileData.rank"
             v-if="profileData.type == 'mentor'"
             style="height:100%;"
           />
@@ -116,7 +116,12 @@
         <b-col lg="4">
           <stats v-if="profileData.type == 'student'" style="height:100%;" />
           <requirements
+            :champs="profileData.champs"
+            :servers="profileData.region"
+            :langs="profileData.languages"
+            :roles="profileData.roles"
             :requirements="profileData.requirements"
+            :did="profileData.did"
             v-if="profileData.type == 'mentor'"
             style="height:100%;"
           />
@@ -250,6 +255,9 @@ export default {
         solid: true,
         toaster: "b-toaster-top-center"
       });
+    },
+    scrollToReviews: function() {
+      window.scrollTo(0, 950);
     },
     saveBG: function() {
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;

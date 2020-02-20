@@ -49,7 +49,7 @@
                     :title="r.replace(/^\w/, c => c.toUpperCase())"
                     :alt="r"
                     v-for="r in this.roles"
-                    :src="r == 'teams'? '/static/roles/fill.png':'/static/roles/Position_' + rank.replace(/^\w/, c => c.toUpperCase()).substring(-1, rank.indexOf('_') != -1 ? rank.indexOf('_') : rank.length) + '-' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'"
+                    :src="r == 'teams'? '/static/roles/fill.png':'/static/roles/' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'"
                   />
                 </b-col>
               </b-row>
@@ -65,11 +65,6 @@
 export default {
   name: "AboutMe",
   props: ["bio", "champs", "roles", "rank"],
-  mounted: function() {
-    if (!this.rank || this.rank == "default") {
-      this.rank = "challenger";
-    }
-  }
 };
 </script>
 <style scoped>

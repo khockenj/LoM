@@ -111,7 +111,7 @@
       </b-input-group>
     </div>
 
-    <div class="searchContainer">
+    <div class="searchContainer" style='margin-left:.4rem;'>
       <b-card-group deck>
         <search-card
           v-for="m in mentors"

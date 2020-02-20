@@ -83,7 +83,6 @@ var Nav = new Vue({
        this.complete = true;
        if(response.data == false) {
            this.loggedIn = false;
-           console.log(loggedIn)
        } else {
          this.loggedIn = true;
          this.profileData = response.data;
@@ -97,7 +96,7 @@ var Nav = new Vue({
    }
    },
    data: {
-     loggedIn: false,
+     loggedIn: null,
      profileData: null,
      complete: false
    },
