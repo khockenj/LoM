@@ -36,12 +36,21 @@
               <template v-slot:title>Role Match</template>
               Mentor requires you must match at least one of their roles listed:
               <br />
-              <b-badge
-                class="popover-badge"
-                v-for="r in roles"
-                :key="r"
-                :variant="switchVariant(r)"
-              >{{r.toUpperCase()}}</b-badge>
+       <img
+                    :key="r"
+                    class="smallChamps"
+      
+                    v-b-tooltip.hover
+                    :title="r.replace(/^\w/, c => c.toUpperCase())"
+                    :alt="r"
+                    v-for="r in roles"
+                    :src="r == 'teams'? '/static/roles/Clash.svg':'/static/roles/' + r.replace(/^\w/, c => c.toUpperCase()) + '.png'"
+                  />
+          <span v-if="roles.length == 0"><img
+          class="smallChamps"
+          src="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII="
+          v-b-tooltip.hover.top="'Unknown'"
+        /></span>
             </b-popover>
           </b-list-group-item>
           <b-list-group-item v-if="key=='champMatch'" :variant="switchBackgroundVariant(key)">
@@ -97,7 +106,7 @@
           block
           v-b-modal.bookSession
           :variant="failed ? 'danger': 'success'"
-          :disabled="failed"
+          :disabled="failed || this.$parent.$parent.$parent.profileData.did == did"
         >Book a session</b-button>
       </b-card-body>
     </template>
@@ -107,7 +116,7 @@
   <script>
 export default {
   name: "Requirements",
-  props: ["requirements", "champs", "servers", "langs", "roles"],
+  props: ["requirements", "champs", "servers", "langs", "roles", "did"],
   data: function() {
     return {
       failed: false
@@ -134,21 +143,6 @@ export default {
         }
       }
       return rf;
-    },
-    switchVariant: function(r) {
-      if (r == "adc") {
-        return "danger";
-      } else if (r == "middle") {
-        return "primary";
-      } else if (r == "jungle") {
-        return "success";
-      } else if (r == "support") {
-        return "warning";
-      } else if (r == "top") {
-        return "light";
-      } else if (r == "teams") {
-        return "info";
-      }
     },
     rankSwitchBgVariant: function(rank, mm) {
       let user = this.$parent.$parent.$parent.profileData;
@@ -235,5 +229,6 @@ export default {
 }
 .smallChamps {
   margin: 0.05rem;
+  width:2.5rem;
 }
 </style>
