@@ -104,6 +104,7 @@ export default {
   name: "SearchCard",
   props: ["id", "name", "main", "rank", "champs", "roles", "did"],
   methods: {
+    //No longer in use - switched it for icons
     switchVariant: function(r) {
       if (r == "adc") {
         return "danger";

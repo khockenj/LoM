@@ -242,6 +242,24 @@ def getNews():
     prep = mongo.db.news.find().sort([("date", -1)])
     return json.dumps([c for c in prep], default=json_util.default)
 
+@app.route('/api/riotApi')
+def riotAPI():
+    region = "NA".lower()
+    user = "kinky kev"
+    timeInMs = 1581708122000
+    accountId = "wWFLBQkeRL68jFHvaoPWedkWCQefJowT3dO97n3RCSZTYac"
+    season = 13
+    summonerId = "PzwonDuetnb_bbfW8BIpbzdZQHdB5NwApHO3dseQmY4C2lY"
+    #get accountId and summonerId from username
+    url = "https://" + region + "1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + user + "?api_key=" + RIOT_API_KEY
+    #Games from x time ago
+    url2 = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?beginTime=" + timeInMs + "&api_key=RGAPI-" + RIOT_API_KEY
+    #Season games
+    url3 = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?season=" + season + "&api_key=RGAPI-" + RIOT_API_KEY
+    #Rank
+    url4 = "https://" + region + "1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId + "?api_key=" + RIOT_API_KEY
+
+
 @app.route('/api/getSkinList', methods=['POST'])
 def getSkinList():
 #This will update skin/champion lists -> still need to manually update splashes + add new champs to square_icons via community dragon + .ddragon in riot disc

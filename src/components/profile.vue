@@ -69,10 +69,17 @@
           <i
             v-if="$parent.$parent.profileData.did == profileData.did"
             class="fas fa-cog"
-            style="position: absolute;right:.6rem;top:4rem;"
+            style="position: absolute;right:3.1rem;top:4rem;"
             v-b-modal.settings
           ></i>
         </span>
+        <i
+          class="fas fa-sync-alt"
+          style="position: absolute;right:.6rem;top:4rem;"
+          v-b-tooltip.hover.bottomleft="{ variant: 'warning' }"
+          title='Update Information'
+          v-on:click="pullRiotInfo"
+        ></i>
         <i
           class="fas fa-info-circle"
           style="position:absolute; left:.6rem; top:4rem;"
@@ -127,6 +134,7 @@
           />
         </b-col>
       </b-row>
+      <div v-if="profileData.type == 'mentor'">
       <b-row>
         <b-col style="padding:0">
           <b-jumbotron
@@ -155,6 +163,7 @@
           </b-card>
           </b-col>
         </b-row>
+        </div>
     </b-container>
 
     <b-modal @ok="saveBG" id="settings" ok-title="Save">
@@ -296,6 +305,9 @@ export default {
       } else {
         return [0, 0];
       }
+    },
+    pullRiotInfo: function() {
+      return null;
     },
     getData: function() {
       const path =
