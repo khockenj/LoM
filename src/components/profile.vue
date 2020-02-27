@@ -113,7 +113,7 @@
       </b-row>
       <b-row>
         <b-col lg="8">
-          <goals v-if="profileData.type == 'student'" style="height:100%;" />
+          <goals v-if="profileData.type == 'student'" :goalProgress='profileData.goalProgress' style="height:100%;" />
           <achievements
             :achievements="profileData.achievements"
             v-if="profileData.type == 'mentor'"
@@ -242,18 +242,39 @@ export default {
       selectedBG: null,
       filteredList: null,
       skinList: skinlist,
-      graphdata: [
-        {
-          x: [1, 2, 3, 4],
-          y: [10, 15, 13, 17],
-          type: "scatter"
-        }
-      ],
-      layout: {
-        title: "Rank Graph"
-      },
+      graphdata: [],
+      layout: {},
       profileData: {},
-      reviews: null
+      reviews: null,
+      rankGraphInfo: {
+        "challenger_1": 26,
+        "grandmaster_1": 25,
+        "master_1": 24,
+        "diamond_1": 23,
+        "diamond_2": 22,
+        "diamond_3": 21,
+        "diamond_4": 20,
+        "platinum_1": 19,
+        "platinum_2": 18,
+        "platinum_3": 17,
+        "platinum_4": 16,
+        "gold_1": 15,
+        "gold_2": 14,
+        "gold_3": 13,
+        "gold_4": 12,
+        "silver_1": 11,
+        "silver_2": 10,
+        "silver_3": 9,
+        "silver_4": 8,
+        "bronze_1": 7,
+        "bronze_2": 6,
+        "bronze_3": 5,
+        "bronze_4": 4,
+        "iron_1": 3,
+        "iron_2": 2,
+        "iron_3": 1,
+        "iron_4": 0
+      }
     };
   },
   methods: {
@@ -267,6 +288,9 @@ export default {
     },
     scrollToReviews: function() {
       window.scrollTo(0, 950);
+    },
+    graphRank: function(rank) {
+      return this.rankGraphInfo[rank];
     },
     saveBG: function() {
       this.profileData.bg = this.selectedChamp + "_" + this.selectedBG;
@@ -307,7 +331,29 @@ export default {
       }
     },
     pullRiotInfo: function() {
-      return null;
+      const path = "http://localhost:5000/api/riotApi"
+      //const path = '/api/riotApi'
+      axios
+        .post(path, {
+          did: this.profileData.did,
+          region: this.profileData.accounts[this.profileData.mainAccount-1].region,
+          accountName: this.profileData.accounts[this.profileData.mainAccount-1].name
+        })
+        .then(response => {
+          console.log(response);
+          this.makeToast("Updated", "Updated profile", "success");
+          this.profileData.rank = response.data.rank;
+          this.profileData.rankTimeline.push(response.data)
+          this.profileData.goals = response.data.goals;
+        })
+        .catch(error => {
+          this.makeToast(
+            "Error",
+            "Err - there's been an error in the back. Try again or report it - thank you!",
+            "danger"
+          );
+          console.log(error);
+        });
     },
     getData: function() {
       const path =
@@ -317,6 +363,38 @@ export default {
         .get(path)
         .then(response => {
           this.profileData = response.data;
+          this.graphdata = [{
+            x: this.profileData.rankTimeline.map(a => new Date(a.time*1000).toDateString()),
+            y: this.profileData.rankTimeline.map(a => this.graphRank(a.rank)),
+          type: "scatter"
+        }]
+        this.layout = {
+       
+        title: "Rank Graph",
+        xaxis: {
+    autorange: true,
+    rangeselector: {
+      buttons: [
+        {
+          count: 1,
+          label: '1m',
+          step: 'month',
+          stepmode: 'backward'
+        },
+        {
+          count: 6,
+          label: '6m',
+          step: 'month',
+          stepmode: 'backward'
+        },
+        {step: 'all'}
+      ]},
+      },
+      yaxis: {
+         tickvals: this.profileData.rankTimeline.map(a => this.graphRank(a.rank)),
+        ticktext: this.profileData.rankTimeline.map(a => (a.rank[0].toUpperCase() + a.rank.slice(1)).replace(/_/g, ' '))
+      }
+        }
           console.log(this.profileData);
         })
         .catch(error => {

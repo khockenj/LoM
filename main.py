@@ -10,6 +10,8 @@ import dns
 import hashlib
 from pathlib import Path
 from shutil import unpack_archive
+import urllib.parse
+import datetime
 keys = {}
 keyPath = Path('./').glob('keys.json')
 keyList = [x for x in keyPath if x.is_file()]
@@ -22,6 +24,7 @@ RIOT_API_KEY = keys['RIOT_API_KEY']
 TWITCH_CLIENT_ID = keys['TWITCH_CLIENT_ID']
 TWITCH_CLIENT_SECRET = keys['TWITCH_CLIENT_SECRET']
 PATCH = keys['PATCH']
+SEASON = keys['SEASON']
 
 app = Flask(__name__,
             static_folder = "./dist/static",
@@ -242,23 +245,47 @@ def getNews():
     prep = mongo.db.news.find().sort([("date", -1)])
     return json.dumps([c for c in prep], default=json_util.default)
 
-@app.route('/api/riotApi')
+@app.route('/api/riotApi', methods=['POST'])
 def riotAPI():
-    region = "NA".lower()
-    user = "kinky kev"
-    timeInMs = 1581708122000
-    accountId = "wWFLBQkeRL68jFHvaoPWedkWCQefJowT3dO97n3RCSZTYac"
-    season = 13
-    summonerId = "PzwonDuetnb_bbfW8BIpbzdZQHdB5NwApHO3dseQmY4C2lY"
-    #get accountId and summonerId from username
-    url = "https://" + region + "1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + user + "?api_key=" + RIOT_API_KEY
+    data = request.get_json()
+    region = data['region']
+    user = data['accountName']
+    timeInMs = str(int(datetime.datetime.now().timestamp()*1000-604800000)) 
+    print(timeInMs)
+    accountInfoURL = "https://" + region + "1.api.riotgames.com/lol/summoner/v4/summoners/by-name/" + user + "?api_key=" + RIOT_API_KEY
+    accountInfo = requests.get(accountInfoURL).json()
+    accountId = accountInfo['accountId']
+    summonerId = accountInfo['id']
     #Games from x time ago
-    url2 = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?beginTime=" + timeInMs + "&api_key=RGAPI-" + RIOT_API_KEY
+    weeklyMatchlistURL = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?beginTime=" + timeInMs + "&api_key=" + RIOT_API_KEY
+    weeklyMatchlist = requests.get(weeklyMatchlistURL).json()
+    print(weeklyMatchlist)
+    totalChamps = len(set([c['champion'] for c in weeklyMatchlist['matches']]))
+    totalGames = weeklyMatchlist['totalGames']
+    print(totalChamps)
     #Season games
-    url3 = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?season=" + season + "&api_key=RGAPI-" + RIOT_API_KEY
+    url3 = "https://" + region + "1.api.riotgames.com/lol/match/v4/matchlists/by-account/" + accountId + "?season=" + SEASON + "&api_key=" + RIOT_API_KEY
     #Rank
-    url4 = "https://" + region + "1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId + "?api_key=" + RIOT_API_KEY
-
+    rankedStatsURL = "https://" + region + "1.api.riotgames.com/lol/league/v4/entries/by-summoner/" + summonerId + "?api_key=" + RIOT_API_KEY
+    rankedStats = requests.get(rankedStatsURL).json()
+    soloq = next((x for x in rankedStats if x['queueType'] == "RANKED_SOLO_5x5"), None)
+    convertedNumber = None
+    if soloq['rank'] == "I":
+        convertedNumber = "1" 
+    elif soloq['rank'] == "II": 
+        convertedNumber = "2"
+    elif soloq['rank'] == "III":
+        convertedNumber = "3"
+    else:
+        convertedNumber = "4"
+    if soloq['tier']:
+        finalRank = soloq['tier'].lower() + "_" + convertedNumber
+    else: 
+        finalRank = "default"
+    goals =  {"gamesPlayed": totalGames, "champsPlayed": totalChamps, "lastUpdate": datetime.datetime.now().timestamp()}
+    final = {"rank": finalRank, "goalProgress": goals}
+    mongo.db.users.update({'did': data['did']},{'$set':final, '$push': { "rankTimeline": {"rank": finalRank, "time": datetime.datetime.now().timestamp() }}})
+    return {"rank": finalRank, "time": datetime.datetime.now().timestamp(), "goalProgress": goals}
 
 @app.route('/api/getSkinList', methods=['POST'])
 def getSkinList():
