@@ -1,5 +1,5 @@
 <template>
-  <b-navbar v-if="p" toggleable="lg" type="dark" style="background-color:black;">
+  <b-navbar v-if="p" toggleable="lg" type="dark" style="background-color:transparent;">
     <b-navbar-brand to="/">
       LoM
       <!--<img src="/static/logo.png" style="max-width:128px;position:absolute;z-index:1000;left:-1.5rem;top:-.5rem;" class="d-inline-block align-top" alt="LoM">-->
@@ -9,20 +9,38 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item>
+
+        <b-nav-item style='display:none'>
           <router-link class="nav-link" to="/search">
             <i class="fas fa-search textIcon" style="color:steelblue"></i>Search Mentors
           </router-link>
         </b-nav-item>
-        <b-nav-item>
+
+              <b-nav-item>
           <router-link class="nav-link" to="/nowLive">
             <i class="fas fa-video textIcon" style="color:rgb(156,0,6);"></i>Live Mentors
           </router-link>
         </b-nav-item>
       </b-navbar-nav>
 
+
+     
+  
+ 
+
       <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto" v-if="p.loggedIn">
+      <b-navbar-nav class="ml-auto">
+        <b-nav-form>
+      <b-input-group class="semi-transparent">
+         <template v-slot:append>
+      <b-input-group-text class='semi-transparent'><i class="fas fa-search textIcon" style="color:steelblue"></i></b-input-group-text>
+    </template>
+      <b-input class='semi-transparent' placeholder="Search Mentors"></b-input>
+      </b-input-group>
+    </b-nav-form>
+      </b-navbar-nav>
+
+      <b-navbar-nav class="" v-if="p.loggedIn">
         <b-nav-item-dropdown right>
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
@@ -50,7 +68,9 @@
         </b-nav-item-dropdown>
       </b-navbar-nav>
 
-      <b-navbar-nav class="ml-auto" v-if="p && p.loggedIn == false" right>
+
+
+      <b-navbar-nav class="" v-if="p && p.loggedIn == false" right>
         <b-button class="mx-2" variant="primary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
         <b-button variant="success" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
       </b-navbar-nav>
@@ -58,8 +78,24 @@
   </b-navbar>
 </template>
 <style>
+.navbar {
+  font-size:1.25rem;
+}
 .nav-link {
   display: inline;
+  margin:auto;
+}
+.nav-item {
+  border: 1px solid #fff;
+  border-radius: .25rem;
+}
+.semi-transparent {
+  background-color:rgba(0,0,0,.4);
+  color: #fff;
+  font-size:1.25rem;
+}
+.btn {
+  font-size:1.25rem;
 }
 </style>
 <script>

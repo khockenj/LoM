@@ -2,10 +2,11 @@
 <div class="login" style="max-width:400px;">
 <div class="overlay"></div>
    <!-- <img src="/static/logo.png" style="max-width:60%;padding-bottom:1%;" />-->
-  <b-container bg-variant="dark" style="color:white;padding-bottom:15%;text-align:left">
-    <b-row class="my-1 py-2">
-        <b-col style="font-size:2rem;text-align:center;padding-bottom:3%">Sign Up</b-col>
-        </b-row>
+ <b-card bg-variant='dark' text-variant="light" style="max-width:400px;margin:auto;" header-bg-variant="info" border-variant="info">
+       <template v-slot:header>
+     <i class="fas fa-user-plus no-hover-header"></i> Sign Up
+    </template>
+
     <b-row class="my-1 py-2">
       <b-col>
         <b-button style="background-color:#7289da;color:white;" href="/login?r=1&m=0" block>Sign up with <i style="color:white!important;" class="fab fa-discord"></i>Discord</b-button>
@@ -17,13 +18,13 @@
       </b-col>
     </b-row>
     <b-row class="my-1">
-        <b-col lg="12">
-             <router-link class="nav-link" style="position:absolute;bottom:-2rem;right:0;" to="/login">Already a user?</router-link>
+        <b-col lg="12" style='text-align:right;'>
+             <router-link class="nav-link custom-control" to="/login">Already a user?</router-link>
          </b-col>
          <b-col>
          </b-col>
         </b-row>
-  </b-container>
+    </b-card>
   <b-modal @ok="checkCode" id="mentorCode">   
    <template v-slot:modal-title>
       Mentor Code
@@ -89,10 +90,15 @@ export default {
 }
 
 .login {
-border:2px solid white;
-margin:auto;
-margin-top:5%;
-border-radius:5rem;
-background-color:#32383E;
+  margin: auto;
+  padding-top: 5%;
+}
+.no-hover-header, .no-hover-header:hover {
+  cursor:default;
+  color:inherit;
+}
+
+.card-header {
+  font-size:2rem;
 }
 </style>

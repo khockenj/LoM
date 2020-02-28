@@ -10,7 +10,8 @@
         fluid
       >
         <div style="display:flex;">
-          <div style="flex-grow:12;" v-on:click="scrollToReviews">
+          <div style="flex-grow:12;" class='starHolder' v-on:click="scrollToReviews">
+            <div v-if="profileData.type == 'mentor'">
             <i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i>
             <i
               class="fas fa-star-half-alt star"
@@ -20,6 +21,7 @@
               class="far fa-star star"
               v-for="s in 5-Math.ceil(profileData.score)+customRound(profileData.score-Math.floor(profileData.score))[1]"
             ></i>
+          </div>
           </div>
           <div class="champHolder" style="flex-grow:0">
             <img
@@ -451,7 +453,9 @@ export default {
   left: 0px;
   z-index: -1000;
 }
-
+.starHolder {
+  min-height: calc(12px + 1vw);
+}
 .rankIcon {
   max-width: 96px;
   max-height: 96px;
