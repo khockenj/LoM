@@ -50,18 +50,18 @@ export default {
 <style scoped>
 .overlay {
   background-color: rgba(0, 0, 0, 0.5) !important;
-  background-image: url("/static/backgrounds/splash/Yasuo_0.jpg");
+  background-image: url("/static/backgrounds/splash/Fiora_3.jpg");
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center;
+  /* background-position: center; */
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   z-index: -1000;
-  filter: blur(2px)  drop-shadow(16px 16px 20px red);
+  filter: blur(2px) drop-shadow(16px 16px 20px red);
   -webkit-filter: blur(2px);
 
 }
