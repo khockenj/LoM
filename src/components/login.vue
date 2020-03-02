@@ -1,12 +1,12 @@
 <template>
   <div class="login" style="max-width:600px;">
     <div class="overlay"></div>
-        <b-card bg-variant='dark' text-variant="light" style="max-width:600px;margin:auto;" header-bg-variant="info" border-variant="info">
+        <b-card class='card-holder' header-bg-variant="secondary" border-variant="secondary" header-text-variant="light">
        <template v-slot:header>
-     <i class="fas fa-sign-in-alt no-hover-header"></i> Sign In
+    Sign In
     </template>
-     <img src="/static/logo.png" style="max-width:45%;padding-bottom:1%;" />
-      <b-row class="my-1 py-2">
+     <img src="/static/logo.png" style="max-width:45%;padding-bottom:5%;" />
+      <b-row class="pt-4 pb-2">
         <b-col>
           <b-button
             style="background-color:#7289da;color:white;"
@@ -14,14 +14,15 @@
             href="/login"
             block
           >
-           <i class="fas fa-sign-in-alt textIcon"></i>Sign in with
-            <i style="color:white!important;" class="fab fa-discord"></i>Discord
+          Sign in with
+            Discord  <i style="color:white!important;" class="fab fa-discord"></i>
           </b-button>
         </b-col>
       </b-row>
-      <b-row class="my-1">
+      <b-row>
         <b-col lg="6" style='text-align:left;'>
           <b-form-checkbox
+          style='display:none'
             id="checkbox-1"
             name="checkbox-1"
             value="remember"
@@ -49,8 +50,8 @@ export default {
 
 <style scoped>
 .overlay {
-  background-color: rgba(0, 0, 0, 0.5) !important;
-  background-image: url("/static/backgrounds/splash/Fiora_3.jpg");
+  /* background-color: rgba(0, 0, 0, 0.5) !important; */
+  background-image: url("/static/kevin.png");
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
@@ -61,11 +62,17 @@ export default {
   top: 0;
   left: 0;
   z-index: -1000;
-  filter: blur(2px) drop-shadow(16px 16px 20px red);
+  filter: blur(2px);
   -webkit-filter: blur(2px);
-
 }
-
+.card-holder {
+  max-width:600px;
+  margin:auto;
+  background-color:rgba(255,255,255,.85);
+}
+.card {
+  border:5px solid inherit;
+}
 .login {
   margin: auto;
   padding-top: 5%;

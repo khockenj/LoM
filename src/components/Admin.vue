@@ -1,7 +1,7 @@
 <template>
   <div class="admin">
     <div class="overlay"></div>
-    <b-card bg-variant='dark' text-variant="light" style="max-width:1000px;margin:auto;margin-top:2rem;" header-bg-variant="info" border-variant="info">
+    <b-card style="max-width:1000px;margin:auto;margin-top:2rem;" header-bg-variant="info" header-text-variant="light" border-variant="info">
          <template v-slot:header>
              <i class="fas fa-toolbox no-hover-header"></i>Administration
     </template>

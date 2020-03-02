@@ -2,7 +2,7 @@
   <b-card
     text-variant="white"
     no-body
-    style="max-width:18.1rem;min-width:18.1rem;background-color:transparent;border:2px solid black;"
+    style="max-width:18.1rem;min-width:18.1rem;background-color:transparent;"
     img-top
     :img-src="main? '/static/tiles/' + main.replace(/[^A-Z0-9]/ig, '') + '_0.jpg': 'data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mOs/A8AAfcBeguDlP0AAAAASUVORK5CYII='"
   >

@@ -16,7 +16,7 @@ export default {
   flex:none;
   margin-top:1rem;
   background-color:rgba(0,0,0,0.95);
-  height:7%;
+  height:6.5%;
   width:100%;
   color: rgba(255,255,255,0.4);
   font-size:36px;

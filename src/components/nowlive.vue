@@ -31,7 +31,7 @@
             :href="'https://www.twitch.tv/' + mentor.user_name"
             variant="primary"
           > <i class="fas fa-video textIcon"></i>Visit Stream</b-button>
-          <b-button :to="'/profile/' + mentor.did" variant="success"> <i class="fas fa-user textIcon"></i>View Profile</b-button>
+          <b-button :to="'/profile/' + mentor.did" variant="success"><i class="fas fa-user textIcon"></i>View Profile</b-button>
       </b-list-group-item>
     </b-list-group>
 
@@ -89,7 +89,7 @@ export default {
 .searchContainer {
   margin-left:1rem;
   margin-right:1rem;
-  margin-top:1rem;
+  padding-top:1rem;
 }
 .card-header{
   background-color:rgba(0,0,0,.8);
@@ -112,6 +112,8 @@ h4 {
   border-bottom-right-radius: calc(0.25rem - 1px);
   border-bottom-left-radius: calc(0.25rem - 1px);
 }
-
+.btn {
+  font-size:1rem;
+}
 </style>
 

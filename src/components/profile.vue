@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="overlay" :style="setBG"></div>
-    <div>
+    <div style='display:none;'>
       <b-jumbotron
         style="padding:1rem 1rem!important;"
         bg-variant="dark"
@@ -93,6 +93,8 @@
         </template>
       </b-jumbotron>
     </div>
+
+
     <b-container style="max-width:1200px">
       <b-row class="my-4">
         <b-col lg="12">
@@ -445,6 +447,7 @@ export default {
   background-image: var(--bg);
   background-blend-mode: color;
   background-repeat: no-repeat;
+  
   background-size: cover;
   position: fixed;
   width: 100%;
@@ -497,4 +500,5 @@ export default {
 .no-hover {
   cursor:auto;
 }
+
 </style>

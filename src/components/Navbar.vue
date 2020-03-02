@@ -2,7 +2,6 @@
   <b-navbar v-if="p" toggleable="lg" type="dark" style="background-color:transparent;">
     <b-navbar-brand to="/">
       LoM
-      <!--<img src="/static/logo.png" style="max-width:128px;position:absolute;z-index:1000;left:-1.5rem;top:-.5rem;" class="d-inline-block align-top" alt="LoM">-->
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -16,13 +15,14 @@
           </router-link>
         </b-nav-item>
 
-              <b-nav-item>
+              <b-nav-item style='display:none;'>
           <router-link class="nav-link" to="/nowLive">
             <i class="fas fa-video textIcon" style="color:rgb(156,0,6);"></i>Live Mentors
           </router-link>
         </b-nav-item>
+           
+        <b-button variant='outline-danger' to="/nowLive"><i class="fas fa-video textIcon" style="color:rgb(156,0,6);"></i>Live Mentors</b-button>
       </b-navbar-nav>
-
 
      
   
@@ -33,9 +33,9 @@
         <b-nav-form>
       <b-input-group class="semi-transparent">
          <template v-slot:append>
-      <b-input-group-text class='semi-transparent'><i class="fas fa-search textIcon" style="color:steelblue"></i></b-input-group-text>
+      <b-input-group-text v-on:click="sendSearch" class='semi-transparent'><i class="fas fa-search textIcon" style="color:steelblue"></i></b-input-group-text>
     </template>
-      <b-input class='semi-transparent' placeholder="Search Mentors"></b-input>
+      <b-input class='semi-transparent' v-model='searchText' placeholder="Search Mentors"></b-input>
       </b-input-group>
     </b-nav-form>
       </b-navbar-nav>
@@ -71,8 +71,8 @@
 
 
       <b-navbar-nav class="" v-if="p && p.loggedIn == false" right>
-        <b-button class="mx-2" variant="primary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
-        <b-button variant="success" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
+        <b-button class="mx-2" variant="secondary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
+        <b-button variant="primary" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>
@@ -90,21 +90,29 @@
   border-radius: .25rem;
 }
 .semi-transparent {
-  background-color:rgba(0,0,0,.4);
-  color: #fff;
+  background-color:rgba(255,255,255,.85);
   font-size:1.25rem;
 }
 .btn {
   font-size:1.25rem;
 }
+.invisButton {
+  background-color:rgba(0,0,0,0);
+  border:0;
+}
 </style>
 <script>
 export default {
   name: "Navbar",
-  methods: {},
+  methods: {
+    sendSearch: function() {
+      console.log(this.searchText);
+    }
+  },
   data: function() {
     return {
-      p: null
+      p: null,
+      searchText: null
     }
   },
   beforeCreate: async function() {
