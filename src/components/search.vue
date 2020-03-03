@@ -24,9 +24,8 @@ export default {
 	}
 	console.log(championList);
 	return championList;
-  },
   }
-
+  },
   }
 </script>
 <style scoped>

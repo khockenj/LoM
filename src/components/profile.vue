@@ -1,7 +1,7 @@
 <template>
   <div class="profile">
     <div class="overlay" :style="setBG"></div>
-    <div style='display:none;'>
+    <div>
       <b-jumbotron
         style="padding:1rem 1rem!important;"
         bg-variant="dark"

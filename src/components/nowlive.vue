@@ -2,7 +2,9 @@
   <div class="nowlive">
     <div class="overlay"></div>
     <div class="searchContainer">
-      <b-card-group deck v-if="live">
+      
+
+         <b-card-group deck v-if="live">
         <b-card
           text-variant="white"
           :key="mentor.user_id"
@@ -91,16 +93,11 @@ export default {
   margin-right:1rem;
   padding-top:1rem;
 }
-.card-header{
-  background-color:rgba(0,0,0,.8);
-}
+
 h4 {
   font-size:1.75rem;
 }
-.list-group-item {
-   /* margin-bottom:.25rem; */
-   border-bottom:2px solid black;
-}
+
 .card-img-top, .card-img {
   width: 100%;
   object-fit: cover;
@@ -108,7 +105,6 @@ h4 {
 .footer-button {
   padding:1rem;
   height:100%;
-  background-color:#343A40;
   border-bottom-right-radius: calc(0.25rem - 1px);
   border-bottom-left-radius: calc(0.25rem - 1px);
 }

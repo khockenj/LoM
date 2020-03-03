@@ -135,7 +135,7 @@ export default {
   components: {
     SearchCard
   },
-  props: ["champions"],
+  props: ["champions", "searchText"],
   data: function() {
     return {
       search: "",
@@ -265,9 +265,18 @@ export default {
   },
   computed: {},
   ready: function() {},
-  watch: {},
   mounted: function() {
     this.getData();
+    console.log(this);
+  },
+  beforeUpdate: function() {
+    if(this.$route.params.searchText) {
+      this.search = this.$route.params.searchText;
+      this.$route.params.searchText = null;
+      this.searchFunction();
+    } else {
+      this.search = null;
+    }
   }
 };
 </script>

@@ -6,7 +6,7 @@
    <template v-slot:header>
     League of Mentoring
     </template>
-  <p>League of Mentoring started in 1854 by <a href='https://euw.op.gg/summoner/userName=katniss+evermeme'>Katniss Evermeme</a> as a discord server to help his friends improve
+  <p>League of Mentoring started in 2016 by <a href='https://euw.op.gg/summoner/userName=katniss+evermeme'>Katniss Evermeme</a> as a discord server to help his friends improve
   at League of Legends. Since then, it has grown to be a community of players all seeking to improve at their craft.  </p>
 
   <p>League of Mentoring is the place to come if you want to improve and unlock your potential</p>

@@ -1,5 +1,5 @@
 <template>
-  <b-navbar v-if="p" toggleable="lg" type="dark" style="background-color:transparent;">
+  <b-navbar v-if="p" toggleable="lg" type="dark" style='background-color:#000;'>
     <b-navbar-brand to="/">
       LoM
     </b-navbar-brand>
@@ -21,7 +21,9 @@
           </router-link>
         </b-nav-item>
            
-        <b-button variant='outline-danger' to="/nowLive"><i class="fas fa-video textIcon" style="color:rgb(156,0,6);"></i>Live Mentors</b-button>
+        <b-button variant='outline-danger' to="/nowLive" class='header-btn'><i class="fas fa-video textIcon"></i>Live Mentors</b-button>
+        <b-button variant='outline-success' to="/nowLive" class='header-btn'><i class="fas fa-calendar-week textIcon"></i>Events</b-button>
+        <b-button variant='outline-primary' to="/nowLive" class='header-btn'><i class="fas fa-newspaper textIcon"></i>News &amp; Updates</b-button>
       </b-navbar-nav>
 
      
@@ -30,14 +32,14 @@
 
       <!-- Right aligned nav items -->
       <b-navbar-nav class="ml-auto">
-        <b-nav-form>
+
       <b-input-group class="semi-transparent">
          <template v-slot:append>
-      <b-input-group-text v-on:click="sendSearch" class='semi-transparent'><i class="fas fa-search textIcon" style="color:steelblue"></i></b-input-group-text>
+      <b-input-group-text v-on:click="sendSearch" class='semi-transparent click'><i class="fas fa-search textIcon click" style="color:steelblue"></i></b-input-group-text>
     </template>
-      <b-input class='semi-transparent' v-model='searchText' placeholder="Search Mentors"></b-input>
+      <b-input v-on:keyup.enter="sendSearch" :disabled="$route.name == 'Search'" class='semi-transparent' v-model='searchText' placeholder="Search Mentors"></b-input>
       </b-input-group>
-    </b-nav-form>
+
       </b-navbar-nav>
 
       <b-navbar-nav class="" v-if="p.loggedIn">
@@ -79,26 +81,38 @@
 </template>
 <style>
 .navbar {
-  font-size:1.25rem;
+  font-size:1.1rem;
 }
 .nav-link {
   display: inline;
   margin:auto;
 }
-.nav-item {
-  border: 1px solid #fff;
-  border-radius: .25rem;
-}
 .semi-transparent {
-  background-color:rgba(255,255,255,.85);
-  font-size:1.25rem;
+  font-size:1.1rem;
+
 }
 .btn {
-  font-size:1.25rem;
+  font-size:1.1rem;
 }
 .invisButton {
   background-color:rgba(0,0,0,0);
   border:0;
+}
+.click {
+  cursor:pointer;
+}
+.form-control {
+  border-top-left-radius:.25rem!important;
+  border-bottom-left-radius:.25rem!important;
+  background-color:rgba(255,255,255,.9);
+}
+.input-group > .input-group-append > .input-group-text {
+  border-top-right-radius:.25rem!important;
+  border-bottom-right-radius:.25rem!important;
+}
+.header-btn {
+  margin-left:1rem;
+  margin-right:1rem;
 }
 </style>
 <script>
@@ -106,7 +120,9 @@ export default {
   name: "Navbar",
   methods: {
     sendSearch: function() {
-      console.log(this.searchText);
+      if(this.searchText && this.$route.name != 'Search') {
+       this.$router.push({'name': 'Search', 'params': {searchText: this.searchText}});
+      }
     }
   },
   data: function() {

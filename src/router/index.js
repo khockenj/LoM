@@ -21,7 +21,8 @@ export default new Router({
     {
       path: '/search',
       name: 'Search',
-      component: SearchPage
+      component: SearchPage,
+      props:true
     },
     {
       path: '/login',
