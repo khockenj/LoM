@@ -1,10 +1,10 @@
 <template>
   <b-card
-    border-variant="warning"
     header="Requirements"
     header-bg-variant="warning"
     header-text-variant="white"
     align="center"
+     style='border:0;'
   >
     <b-list-group flush>
       <span :key="key" v-for="(value, key) in requirements">

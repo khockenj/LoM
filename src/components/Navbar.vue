@@ -1,7 +1,7 @@
 <template>
-  <b-navbar v-if="p" toggleable="lg" type="dark" style='background-color:#000;'>
+  <b-navbar v-if="p" sticky='true' toggleable="lg" type="dark" style='background-color:#000;'>
     <b-navbar-brand to="/">
-      LoM
+      <img src='/static/kevinlogo.png' style='max-width:300px;padding-top:.25rem;padding-left:.25rem;padding-right:.25rem;' />
     </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
@@ -22,8 +22,10 @@
         </b-nav-item>
            
         <b-button variant='outline-danger' to="/nowLive" class='header-btn'><i class="fas fa-video textIcon"></i>Live Mentors</b-button>
-        <b-button variant='outline-success' to="/nowLive" class='header-btn'><i class="fas fa-calendar-week textIcon"></i>Events</b-button>
-        <b-button variant='outline-primary' to="/nowLive" class='header-btn'><i class="fas fa-newspaper textIcon"></i>News &amp; Updates</b-button>
+        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-newspaper textIcon"></i>News &amp; Updates</b-button>
+        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-calendar-week textIcon"></i>Events</b-button>
+        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fab fa-discord textIcon"></i>Discord</b-button>
+         <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-paper-plane textIcon"></i>Contact Us</b-button>
       </b-navbar-nav>
 
      
@@ -74,7 +76,7 @@
 
       <b-navbar-nav class="" v-if="p && p.loggedIn == false" right>
         <b-button class="mx-2" variant="secondary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
-        <b-button variant="primary" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
+        <b-button variant="info" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
       </b-navbar-nav>
     </b-collapse>
   </b-navbar>

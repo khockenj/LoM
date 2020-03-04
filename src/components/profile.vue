@@ -1,10 +1,12 @@
 <template>
   <div class="profile">
     <div class="overlay" :style="setBG"></div>
-    <div>
+    <b-container>
+    <b-row>
+    <b-col class='my-0 py-0'>
       <b-jumbotron
-        style="padding:1rem 1rem!important;"
-        bg-variant="dark"
+        style="padding:1rem 1rem;margin-bottom:0;margin-top:1rem;background-color:#000;border-top-left-radius:3rem;border-top-right-radius:3rem;"
+bg-variant="dark"
         text-variant="white"
         header-level="4"
         fluid
@@ -12,7 +14,7 @@
         <div style="display:flex;">
           <div style="flex-grow:12;" class='starHolder' v-on:click="scrollToReviews">
             <div v-if="profileData.type == 'mentor'">
-            <i class="fas fa-star star" v-for="s in Math.floor(profileData.score)"></i>
+            <i class="fas fa-star star" :key='' v-for="s in Math.floor(profileData.score)"></i>
             <i
               class="fas fa-star-half-alt star"
               v-for="s in customRound(profileData.score-Math.floor(profileData.score))[0]"
@@ -71,20 +73,20 @@
           <i
             v-if="$parent.$parent.profileData.did == profileData.did"
             class="fas fa-cog"
-            style="position: absolute;right:3.1rem;top:4rem;"
+            style="position: absolute;right:4.1rem;top:2.25rem;"
             v-b-modal.settings
           ></i>
         </span>
         <i
           class="fas fa-sync-alt"
-          style="position: absolute;right:.6rem;top:4rem;"
+          style="position: absolute;right:1.6rem;top:2.25rem;"
           v-b-tooltip.hover.bottomleft="{ variant: 'warning' }"
           title='Update Information'
           v-on:click="pullRiotInfo"
         ></i>
         <i
           class="fas fa-info-circle"
-          style="position:absolute; left:.6rem; top:4rem;"
+          style="position:absolute; left:1.6rem; top:2.25rem;"
           v-b-modal.info
         ></i>
         <template v-slot:header>
@@ -92,11 +94,9 @@
           <img class="rankIcon" :src="'/static/ranks/' + profileData.rank + '.png'" />
         </template>
       </b-jumbotron>
-    </div>
-
-
-    <b-container style="max-width:1200px">
-      <b-row class="my-4">
+  </b-col>
+  </b-row>
+      <b-row class="mb-0">
         <b-col lg="12">
           <Plotly
             v-if="profileData.type == 'student'"
@@ -116,7 +116,7 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col lg="8">
+        <b-col lg="8" style='padding-right:0;'>
           <goals v-if="profileData.type == 'student'" :goalProgress='profileData.goalProgress' style="height:100%;" />
           <achievements
             :achievements="profileData.achievements"
@@ -124,7 +124,7 @@
             style="height:100%;"
           />
         </b-col>
-        <b-col lg="4">
+        <b-col lg="4" style='padding-left:0;'>
           <stats v-if="profileData.type == 'student'" style="height:100%;" />
           <requirements
             :champs="profileData.champs"
@@ -140,9 +140,9 @@
       </b-row>
       <div v-if="profileData.type == 'mentor'">
       <b-row>
-        <b-col style="padding:0">
+        <b-col class='my-0 py-0'>
           <b-jumbotron
-            style="padding:1rem 1rem!important;margin-top:1rem;"
+            style="padding-top:1rem;padding-bottom:1rem;margin-bottom:0;"
             bg-variant="dark"
             text-variant="white"
             header-level="4"
@@ -167,6 +167,15 @@
           </b-card>
           </b-col>
         </b-row>
+        <b-calendar 
+        class="border rounded p-2 custom-calendar" 
+        readonly='true' 
+        v-model="dates" 
+        :date-info-fn="dateFilled" 
+        :date-disabled-fn="dateDisabled" 
+        locale="en"
+        label-no-date-selected='General Availability'
+        label-help='Green - typically available, Red - typically unavailable. Contact mentor for more info.'></b-calendar>
         </div>
     </b-container>
 
@@ -193,7 +202,10 @@
             </b-form-select>
           </b-col>
         </b-row>
+
       </b-container>
+             
+
     </b-modal>
 
     <b-modal id="info">
@@ -250,6 +262,7 @@ export default {
       layout: {},
       profileData: {},
       reviews: null,
+      dates: null,
       rankGraphInfo: {
         "challenger_1": 26,
         "grandmaster_1": 25,
@@ -282,6 +295,22 @@ export default {
     };
   },
   methods: {
+    dateDisabled(ymd, date) {
+        // Disable weekends (Sunday = `0`, Saturday = `6`) and
+        // disable days that fall on the 13th of the month
+        const weekday = date.getDay()
+        const day = date.getDate()
+        // Return `true` if the date should be disabled
+        return  day >= 15 
+      },
+      dateFilled(ymd, date) {
+        // Disable weekends (Sunday = `0`, Saturday = `6`) and
+        // disable days that fall on the 13th of the month
+        const weekday = date.getDay()
+        const day = date.getDate()
+        // Return `true` if the date should be disabled
+        return weekday === 0 || weekday === 6  ?  'table-success' : 'table-danger'
+      },
     makeToast(title, content, variant = null) {
       this.$bvToast.toast(content, {
         title: `${title}`,
@@ -447,7 +476,6 @@ export default {
   background-image: var(--bg);
   background-blend-mode: color;
   background-repeat: no-repeat;
-  
   background-size: cover;
   position: fixed;
   width: 100%;
@@ -469,14 +497,14 @@ export default {
   text-align: right;
   font-size: calc(12px + 1vw);
   position: absolute;
-  right: 1%;
+  right: 2%;
 }
 
 .champHolder {
   text-align: left;
   font-size: calc(12px + 1vw);
   position: absolute;
-  left: 1%;
+  left: 2%;
 }
 
 @media (min-width: 576px) {
@@ -484,12 +512,23 @@ export default {
   width:2.5rem;
   margin: 0.1vw;
 }
+
+.custom-calendar {
+  position:fixed;
+  right:2.5%;
+  top:26%;
+  z-index:10000;
+  background-color:#fff;
+}
 }
 
 @media (max-width: 575px) {
 .smallChamp {
   width:1.5rem;
   margin: 0.1vw;
+}
+.custom-calendar {
+  background-color:#fff;
 }
 }
 
@@ -501,4 +540,7 @@ export default {
   cursor:auto;
 }
 
+.card {
+  margin:0;
+}
 </style>
