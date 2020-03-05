@@ -1,5 +1,5 @@
 <template>
-  <b-navbar v-if="p" sticky='true' toggleable="lg" type="dark" style='background-color:#000;'>
+  <b-navbar v-if="p" sticky='true' toggleable="lg" type="light" variant='light'>
     <b-navbar-brand to="/">
       <img src='/static/kevinlogo.png' style='max-width:300px;padding-top:.25rem;padding-left:.25rem;padding-right:.25rem;' />
     </b-navbar-brand>
@@ -82,12 +82,9 @@
   </b-navbar>
 </template>
 <style>
+@media (min-width: 1700px) {
 .navbar {
   font-size:1.1rem;
-}
-.nav-link {
-  display: inline;
-  margin:auto;
 }
 .semi-transparent {
   font-size:1.1rem;
@@ -96,6 +93,25 @@
 .btn {
   font-size:1.1rem;
 }
+}
+
+@media (max-width: 1700px) {
+.navbar {
+  font-size:.9rem;
+}
+.semi-transparent {
+  font-size:.9rem;
+}
+.btn {
+  font-size:.9rem;
+}
+}
+
+.nav-link {
+  display: inline;
+  margin:auto;
+}
+
 .invisButton {
   background-color:rgba(0,0,0,0);
   border:0;

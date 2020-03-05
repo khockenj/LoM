@@ -43,7 +43,7 @@
 </b-list-group>
     </b-card>
 
- <b-card class='card-holder' style="max-width:600px;" header-bg-variant="secondary" border-variant="secondary" header-text-variant="light">
+ <b-card class='card-holder' style="max-width:600px;" header-bg-variant="info" border-variant="secondary" header-text-variant="light">
        <template v-slot:header>
     Sign Up
     </template>
@@ -144,7 +144,7 @@ export default {
 
 .login {
   margin: auto;
-  padding-top: 5%;
+  padding-top: 7%;
 }
 .no-hover-header, .no-hover-header:hover {
   cursor:default;

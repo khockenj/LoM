@@ -5,7 +5,7 @@
     <b-row>
     <b-col class='my-0 py-0'>
       <b-jumbotron
-        style="padding:1rem 1rem;margin-bottom:0;margin-top:1rem;background-color:#000;border-top-left-radius:3rem;border-top-right-radius:3rem;"
+        style="padding:1rem 1rem;margin-bottom:0;margin-top:1rem;background-color:#000;border-top-left-radius:1rem;border-top-right-radius:1rem;"
 bg-variant="dark"
         text-variant="white"
         header-level="4"
@@ -72,21 +72,23 @@ bg-variant="dark"
         <span v-if="$parent.$parent.profileData">
           <i
             v-if="$parent.$parent.profileData.did == profileData.did"
-            class="fas fa-cog"
-            style="position: absolute;right:4.1rem;top:2.25rem;"
+            class="fas fa-image"
+            style="position: absolute;right:4.2rem;top:1.55rem;"
             v-b-modal.settings
+            v-b-tooltip.hover.bottomleft="{ variant: 'info' }"
+            title='Change Background'
           ></i>
         </span>
         <i
           class="fas fa-sync-alt"
-          style="position: absolute;right:1.6rem;top:2.25rem;"
+          style="position: absolute;right:1.6rem;top:1.55rem;"
           v-b-tooltip.hover.bottomleft="{ variant: 'warning' }"
           title='Update Information'
           v-on:click="pullRiotInfo"
         ></i>
         <i
           class="fas fa-info-circle"
-          style="position:absolute; left:1.6rem; top:2.25rem;"
+          style="position:absolute; left:1.6rem; top:1.55rem;"
           v-b-modal.info
         ></i>
         <template v-slot:header>
@@ -170,10 +172,8 @@ bg-variant="dark"
         <b-calendar 
         class="border rounded p-2 custom-calendar" 
         readonly='true' 
-        v-model="dates" 
         :date-info-fn="dateFilled" 
         :date-disabled-fn="dateDisabled" 
-        locale="en"
         label-no-date-selected='General Availability'
         label-help='Green - typically available, Red - typically unavailable. Contact mentor for more info.'></b-calendar>
         </div>
@@ -223,9 +223,48 @@ bg-variant="dark"
       change
     </b-modal>
 
-    <b-modal id="bookSession">
+    <b-modal id="bookSession" @ok='bookSession'>
       <template v-slot:modal-title>Book Session</template>
-      calendar
+      <b-container>
+      <b-row>
+      <b-col>
+      <b-form-datepicker  class="border rounded" 
+        v-model="date" 
+        :date-disabled-fn="dateDisabled" 
+        label-no-date-selected='Select up to 3 dates and times'
+        @input="addDate"
+      reset-button
+      close-button
+        >
+        </b-form-datepicker>
+      </b-col>
+      </b-row>
+      <b-row v-for='(d, index) in dates' :key='index' class='py-1'>
+      <b-col lg='3'>
+        <h5 style='padding-top:.35rem;font-size:1rem;'>{{d.date}}</h5>
+      </b-col>
+      <b-col>
+         <b-form-timepicker v-model="d.time"       
+      now-button
+      reset-button
+      label-no-time-selected='All time is in your local time'></b-form-timepicker>
+      </b-col>
+      <b-col lg='1' style='text-align:left;'>
+      <i class="fas fa-minus-circle red" style='font-size:1.5rem;padding-top:.3rem;' v-on:click='removeDate(index)'></i>
+      </b-col>
+      </b-row>
+      <b-row>
+      <b-col>
+        <b-form-textarea
+      class='my-2'
+      id="textarea"
+      v-model="studentMessage"
+      :placeholder="profileData.mentorMessage"
+      rows="3"
+    ></b-form-textarea>
+      </b-col>
+      </b-row>
+      </b-container>
     </b-modal>
   </div>
 </template>
@@ -262,7 +301,9 @@ export default {
       layout: {},
       profileData: {},
       reviews: null,
-      dates: null,
+      date: null,
+      dates: [],
+      studentMessage: null,
       rankGraphInfo: {
         "challenger_1": 26,
         "grandmaster_1": 25,
@@ -295,13 +336,28 @@ export default {
     };
   },
   methods: {
+    addDate: function() {
+      if(this.dates.length < 3) {
+        this.dates.push({date: this.date, time: null});
+        this.date = null;
+      } else {
+        this.date = null;
+        this.makeToast("Error", "Cannot add more than 3 times", "warning");
+      }
+    },
+    removeDate: function(date) {
+      this.dates.splice(date, 1);
+    },
+    bookSession: function() {
+      alert('hi');
+    },
     dateDisabled(ymd, date) {
         // Disable weekends (Sunday = `0`, Saturday = `6`) and
         // disable days that fall on the 13th of the month
         const weekday = date.getDay()
         const day = date.getDate()
         // Return `true` if the date should be disabled
-        return  day >= 15 
+        return weekday != 0 && weekday != 6
       },
       dateFilled(ymd, date) {
         // Disable weekends (Sunday = `0`, Saturday = `6`) and
@@ -517,7 +573,7 @@ export default {
   position:fixed;
   right:2.5%;
   top:26%;
-  z-index:10000;
+  z-index:1040;
   background-color:#fff;
 }
 }
@@ -542,5 +598,9 @@ export default {
 
 .card {
   margin:0;
+}
+.fas.fa-minus-circle:hover {
+color:rgb(156,0,6);
+font-size:1.5rem;
 }
 </style>
