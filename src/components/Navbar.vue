@@ -1,39 +1,26 @@
 <template>
-  <b-navbar v-if="p" sticky='true' toggleable="lg" type="light" variant='light'>
-    <b-navbar-brand to="/">
-      <img src='/static/kevinlogo.png' style='max-width:300px;padding-top:.25rem;padding-left:.25rem;padding-right:.25rem;' />
-    </b-navbar-brand>
-
+  <b-navbar v-if="p" :sticky='true' toggleable="lg" type="light" variant='light'>
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
 
+  
+      <b-navbar-brand to="/">
+      <img src='/static/kevinlogo.png' style='max-width:300px;padding-top:.25rem;padding-left:.25rem;padding-right:.25rem;' />
+    </b-navbar-brand>
+  
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-
-        <b-nav-item style='display:none'>
-          <router-link class="nav-link" to="/search">
-            <i class="fas fa-search textIcon" style="color:steelblue"></i>Search Mentors
-          </router-link>
-        </b-nav-item>
-
-              <b-nav-item style='display:none;'>
-          <router-link class="nav-link" to="/nowLive">
-            <i class="fas fa-video textIcon" style="color:rgb(156,0,6);"></i>Live Mentors
-          </router-link>
-        </b-nav-item>
            
         <b-button variant='outline-danger' to="/nowLive" class='header-btn'><i class="fas fa-video textIcon"></i>Live Mentors</b-button>
-        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-newspaper textIcon"></i>News &amp; Updates</b-button>
-        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-calendar-week textIcon"></i>Events</b-button>
-        <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fab fa-discord textIcon"></i>Discord</b-button>
+        <b-button variant='outline-info' to="/news" class='header-btn'><i class="fas fa-newspaper textIcon"></i>News &amp; Updates</b-button>
+        <b-button variant='outline-info' to="/events" class='header-btn'><i class="fas fa-calendar-week textIcon"></i>Events</b-button>
+       
+      </b-navbar-nav>
+      <b-navbar-nav>
+  <b-button  target="_blank" rel="nofollow noopener" variant='outline-info' href="https://discord.gg/rRJftdZ" class='header-btn'><i class="fab fa-discord textIcon"></i>Discord</b-button>
          <b-button variant='outline-info' to="/nowLive" class='header-btn'><i class="fas fa-paper-plane textIcon"></i>Contact Us</b-button>
       </b-navbar-nav>
-
-     
-  
- 
-
       <!-- Right aligned nav items -->
-      <b-navbar-nav class="ml-auto">
+      <b-navbar-nav class='ml-auto'>
 
       <b-input-group class="semi-transparent">
          <template v-slot:append>
@@ -44,8 +31,8 @@
 
       </b-navbar-nav>
 
-      <b-navbar-nav class="" v-if="p.loggedIn">
-        <b-nav-item-dropdown right>
+	   <b-navbar-nav  v-if="p.loggedIn">
+        <b-nav-item-dropdown right toggle-class="fix-nav">
           <!-- Using 'button-content' slot -->
           <template v-slot:button-content>
             <img
@@ -71,17 +58,71 @@
           </b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
-
-
-
-      <b-navbar-nav class="" v-if="p && p.loggedIn == false" right>
+	  
+	  
+	  <b-navbar-nav v-if="p && p.loggedIn == false" right>
         <b-button class="mx-2" variant="secondary" to="/login"><i class="fas fa-sign-in-alt textIcon"></i>Sign In</b-button>
         <b-button variant="info" to="/signup"><i class="fas fa-user-plus textIcon"></i>Sign Up</b-button>
       </b-navbar-nav>
+
+
+      
     </b-collapse>
   </b-navbar>
 </template>
-<style>
+<script>
+export default {
+  name: "Navbar",
+  methods: {
+    sendSearch: function(input) {
+      if(this.searchText && this.$route.name != 'Search') {
+        this.$router.push({'name': 'Search', 'params': {searchText: this.searchText}});
+      } else if(!this.searchText && this.$route.name != 'Search') {
+        this.$router.push({'name': 'Search'});
+      }
+        //Clears the model
+        this.searchText = null;
+        //Clears the physical input
+        input.target.value = null;
+    }
+  },
+  data: function() {
+    return {
+      p: null,
+      searchText: null
+    }
+  },
+  beforeCreate: async function() {
+    this.p = await this.$parent;
+  },
+  computed: {
+    resetSearch: function() {
+      return this.searchText;
+    }
+  }
+};
+</script>
+<style scoped>
+.invisButton {
+  background-color:rgba(0,0,0,0);
+  border:0;
+}
+.click {
+  cursor:pointer;
+}
+.form-control {
+  border-top-left-radius:.25rem!important;
+  border-bottom-left-radius:.25rem!important;
+  background-color:rgba(255,255,255,.9);
+}
+.input-group > .input-group-append > .input-group-text {
+  border-top-right-radius:.25rem!important;
+  border-bottom-right-radius:.25rem!important;
+}
+.header-btn {
+  margin-left:2.15rem;
+  margin-right:2.15rem;
+}
 @media (min-width: 1700px) {
 .navbar {
   font-size:1.1rem;
@@ -106,51 +147,4 @@
   font-size:.9rem;
 }
 }
-
-.nav-link {
-  display: inline;
-  margin:auto;
-}
-
-.invisButton {
-  background-color:rgba(0,0,0,0);
-  border:0;
-}
-.click {
-  cursor:pointer;
-}
-.form-control {
-  border-top-left-radius:.25rem!important;
-  border-bottom-left-radius:.25rem!important;
-  background-color:rgba(255,255,255,.9);
-}
-.input-group > .input-group-append > .input-group-text {
-  border-top-right-radius:.25rem!important;
-  border-bottom-right-radius:.25rem!important;
-}
-.header-btn {
-  margin-left:1rem;
-  margin-right:1rem;
-}
 </style>
-<script>
-export default {
-  name: "Navbar",
-  methods: {
-    sendSearch: function() {
-      if(this.searchText && this.$route.name != 'Search') {
-       this.$router.push({'name': 'Search', 'params': {searchText: this.searchText}});
-      }
-    }
-  },
-  data: function() {
-    return {
-      p: null,
-      searchText: null
-    }
-  },
-  beforeCreate: async function() {
-    this.p = await this.$parent;
-  }
-};
-</script>

@@ -9,6 +9,7 @@ import EditPage from '../components/editprofile'
 import NowLive from '../components/nowlive'
 import Dashboard from '../components/dashboard'
 import Admin from '../components/Admin'
+import NotFound from '../components/NotFound'
 Vue.use(Router)
 
 export default new Router({
@@ -59,5 +60,9 @@ export default new Router({
       name: 'Admin',
       component: Admin
     },
+    { 
+     path: '*',
+     component: NotFound 
+    }
   ]
 })

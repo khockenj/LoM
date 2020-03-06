@@ -349,7 +349,39 @@ export default {
       this.dates.splice(date, 1);
     },
     bookSession: function() {
-      alert('hi');
+       const path = "http://localhost:5000/api/bookCoaching"
+      //const path = '/api/bookCoaching'
+      let checkEmpty = this.dates.map(d => d.time).every(a => a);
+      if(this.dates.length > 0 && checkEmpty) {
+      axios
+        .post(path, {
+          mentor: this.profileData.did,
+          student: this.$parent.$parent.profileData.did,
+          studentName: this.$parent.$parent.profileData.name,
+          message: this.studentMessage,
+          accounts:this.$parent.$parent.profileData.accounts,
+          dateOptions: this.dates
+        })
+        .then(response => {
+          console.log(response);
+          if(response.data == 1) this.makeToast("Coaching Request", "Coaching request sent", "success");
+          else if(response.data  == 2) this.makeToast("Coaching Request", "You already have a coaching request in progress with this mentor", "warning");
+          else this.makeToast("Error", "Err - there's been an error in the back. Try again or report it - thank you!", "danger");
+          this.date = null;
+          this.dates = [];
+          this.studentMessage = null;
+        })
+        .catch(error => {
+          this.makeToast(
+            "Error",
+            "Err - there's been an error in the back. Try again or report it - thank you!",
+            "danger"
+          );
+          console.log(error);
+        });
+      } else {
+        this.makeToast("Coaching Request", "You can't submit missing a date or time!", "warning");
+      }
     },
     dateDisabled(ymd, date) {
         // Disable weekends (Sunday = `0`, Saturday = `6`) and

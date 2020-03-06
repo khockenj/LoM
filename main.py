@@ -231,6 +231,33 @@ def getStreams():
     except:
         return json.dumps([])
 
+@app.route('/api/bookCoaching', methods=['POST'])
+def bookCoaching():
+    data = request.get_json()
+    try:
+        check = mongo.db.coaching.find_one({"student": data['student'], "mentor": data['mentor'], "status": { "$in": [ "Pending", "Reschedule", "Accepted" ]}})
+        if not check:
+            did = request.cookies.get('duser')
+            if did and did == data['student']:
+                ins = {
+                    "mentor": data['mentor'],
+                    "student": data['student'],
+                    "studentName": data['studentName'],
+                    "dt": datetime.datetime.now().timestamp(),
+                    "status": "Pending",
+                    "complete": False,
+                    "message": data['message'],
+                    "accounts": data['accounts'],
+                    "dateOptions": data['dateOptions']
+                }
+                mongo.db.coaching.insert(ins)
+            return "1"
+        else:
+            return "2"
+    except:
+        return "0"
+
+
 @app.route('/api/getCoaching/<user>', methods=['GET'])
 def getCoaching(user):
     if request.args.get('complete'):

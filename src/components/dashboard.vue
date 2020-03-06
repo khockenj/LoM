@@ -188,8 +188,8 @@ export default {
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
 .overlay {
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  background-image: url("/static/backgrounds/cassiopeia.jpg");
+/* background-color: rgba(0, 0, 0, 0.4) !important; */
+  background-image: url("/static/kevin.png");
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-attachment: fixed;

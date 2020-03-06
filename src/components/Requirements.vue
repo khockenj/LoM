@@ -105,11 +105,10 @@
         <b-button
           block
           v-b-modal.bookSession
-        >Book a session</b-button>
-        <!--
           :variant="failed ? 'danger': 'success'"
           :disabled="failed  || $parent.$parent.$parent.profileData.did == did"
-          -->
+        >Book a session</b-button>
+
       </b-card-body>
     </template>
   </b-card>

@@ -55,15 +55,18 @@ export default {
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
-  /* background-position: center; */
+  /* 
+   background-position: center; 
+   filter: blur(2px);
+  -webkit-filter: blur(2px);
+  */
   position: fixed;
   width: 100%;
   height: 100%;
   top: 0;
   left: 0;
   z-index: -1000;
-  filter: blur(2px);
-  -webkit-filter: blur(2px);
+ 
 }
 .card-holder {
   max-width:600px;

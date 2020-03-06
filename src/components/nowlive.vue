@@ -76,8 +76,8 @@ export default {
 </script>
 <style scoped>
 .overlay {
-  background-color: rgba(0, 0, 0, 0.4) !important;
-  background-image: url("/static/backgrounds/zed.jpg");
+/* background-color: rgba(0, 0, 0, 0.4) !important; */
+  background-image: url("/static/kevin.png");
   background-blend-mode: color;
   background-repeat: no-repeat;
   background-size: cover;
