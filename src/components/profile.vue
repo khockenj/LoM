@@ -26,7 +26,7 @@ bg-variant="dark"
           </div>
           </div>
           <div class="champHolder" style="flex-grow:0">
-            <img
+            <b-img
               :key="m"
               class="smallChamp"
               :alt="m"
@@ -34,6 +34,7 @@ bg-variant="dark"
               :src="'/static/squareicons/' + m.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'"
                v-b-tooltip.hover.top="{ variant: 'info' }"
           :title='m'
+          rounded
             />
           </div>
           <div class="iconHolder" style="flex-grow:0;">
@@ -86,6 +87,16 @@ bg-variant="dark"
           title='Update Information'
           v-on:click="pullRiotInfo"
         ></i>
+        <i 
+          v-if='!editingMode'
+          class="fas fa-cog"
+          style="position: absolute;right:6.8rem;top:1.55rem;"
+          v-on:click="editingMode = true"></i>
+
+          <i class="fas fa-save"
+          v-if='editingMode'
+          style="position: absolute;right:6.8rem;top:1.55rem;"
+          v-on:click="saveAll"></i>
         <i
           class="fas fa-info-circle"
           style="position:absolute; left:1.6rem; top:1.55rem;"
@@ -111,7 +122,9 @@ bg-variant="dark"
             :bio="profileData.bio"
             :champs="profileData.champs"
             :roles="profileData.roles"
+            :main="profileData.main"
             :rank="profileData.rank == 'default' || !profileData.rank ? 'challenger':profileData.rank"
+            :editingMode='editingMode'
             v-if="profileData.type == 'mentor'"
             style="height:100%;"
           />
@@ -122,6 +135,7 @@ bg-variant="dark"
           <goals v-if="profileData.type == 'student'" :goalProgress='profileData.goalProgress' style="height:100%;" />
           <achievements
             :achievements="profileData.achievements"
+            :editingMode='editingMode'
             v-if="profileData.type == 'mentor'"
             style="height:100%;"
           />
@@ -171,7 +185,7 @@ bg-variant="dark"
         </b-row>
         <b-calendar 
         class="border rounded p-2 custom-calendar" 
-        readonly='true' 
+        :readonly='true' 
         :date-info-fn="dateFilled" 
         :date-disabled-fn="dateDisabled" 
         label-no-date-selected='General Availability'
@@ -288,7 +302,7 @@ export default {
     "profile-champion": ProfileChampionCard,
     "about-me": AboutMe,
     requirements: Requirements,
-    achievements: Achievements
+    achievements: Achievements,
   },
   props: ["p"],
   data: function() {
@@ -304,6 +318,7 @@ export default {
       date: null,
       dates: [],
       studentMessage: null,
+      editingMode: false,
       rankGraphInfo: {
         "challenger_1": 26,
         "grandmaster_1": 25,
@@ -475,6 +490,10 @@ export default {
           );
           console.log(error);
         });
+    },
+    saveAll: function() {
+      this.editingMode = false;
+      console.log(this);
     },
     getData: function() {
       const path =

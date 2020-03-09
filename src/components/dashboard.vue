@@ -1,40 +1,6 @@
 <template>
   <div class="home">
     <div class="overlay"></div>
-    <b-container style="max-width:1200px">
-      <b-row>
-        <b-col lg="9">
-          <b-container>
-            <b-row>
-              <b-col lg="12">
-                <b-card
-                  no-body
-                  border-variant="primary"
-                  header-bg-variant="primary"
-                  header-text-variant="white"
-                  align="center"
-                  header="Recent News"
-                ></b-card>
-              </b-col>
-            </b-row>
-            <b-row>
-              <b-col lg="12">
-                <b-card
-                  v-for="p in newsData"
-                  :key="p._id.$oid"
-                  border-variant="dark"
-                  :header="p.title"
-                  header-bg-variant="dark"
-                  header-text-variant="white"
-                  align="center"
-                >
-                  <b-card-text>{{p.post}}</b-card-text>
-                </b-card>
-              </b-col>
-            </b-row>
-          </b-container>
-        </b-col>
-        <b-col lg="3">
           <b-card
             border-variant="primary"
             header="Recents"
@@ -66,9 +32,7 @@
               </b-list-group-item>
             </b-list-group>
           </b-card>
-        </b-col>
-      </b-row>
-    </b-container>
+
     <b-modal :key="session._id.$oid" v-for="session in coachingData" :id="session._id.$oid">
       <template v-slot:modal-title>Session Information</template>
       <label for="status">Status</label>
@@ -117,8 +81,7 @@ export default {
         { value: "complete", text: "Complete" },
         { value: "incomplete", text: "Incomplete" }
       ],
-      coachingData: null,
-      newsData: null
+      coachingData: null
     };
   },
   methods: {
@@ -132,19 +95,6 @@ export default {
         .then(response => {
           this.coachingData = response.data;
           console.log(this.coachingData);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    },
-    getNewsData: function() {
-      const path = "http://localhost:5000/api/getNews";
-      //const path = '/api/getNews'
-      axios
-        .get(path)
-        .then(response => {
-          this.newsData = response.data;
-          console.log(this.newsData);
         })
         .catch(error => {
           console.log(error);
@@ -179,7 +129,6 @@ export default {
     await this.$parent;
     console.log(this.$parent);
     this.getCoachingData();
-    this.getNewsData();
   }
 };
 </script>

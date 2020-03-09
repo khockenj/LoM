@@ -16,7 +16,7 @@
 
     <b-list-group flush>
       <b-list-group-item style="padding:.75rem 1rem;background-color:#343A40;">
-        <img
+        <b-img
           style='max-width:2.5rem;'
           :id='c'
           :src="'/static/squareicons/' + c.toLowerCase().replace(/[^A-Z0-9]/ig, '') + '_square.png'"
@@ -25,6 +25,7 @@
           class='smallChamps'
           v-b-tooltip.hover.top="{ variant: 'info' }"
           :title='c'
+          rounded
         />
         <span v-if="champs.length == 0"><img
           class="smallChamps"
