@@ -1,6 +1,6 @@
 # lom
 
-> A Vue.js project
+> League of Mentoring v1 - no longer in use
 
 ## Build Setup
 
